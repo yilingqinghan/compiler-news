@@ -1,0 +1,13 @@
+feedparser
+requests
+lxml
+trafilatura
+readability-lxml
+goose3
+jinja2
+python-dotenv
+psycopg2-binary
+scikit-learn
+numpy
+pyyaml
+psycopg2

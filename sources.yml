@@ -1,0 +1,20 @@
+feeds:
+  - name: LLVM Weekly
+    url: https://llvmweekly.org/atom.xml
+    tags: [llvm, weekly]
+  - name: LWN (headlines)
+    url: https://lwn.net/headlines/newrss
+    tags: [linux, toolchain]
+  - name: Phoronix (all)
+    url: https://www.phoronix.com/rss.php
+    tags: [compiler, performance]
+  - name: Rust Blog
+    url: https://blog.rust-lang.org/feed.xml
+    tags: [rust]
+  # 如果后面第 6 步你起了 RSSHub，这些路由就能用
+  # - name: Swift Forums - Evolution (RSSHub)
+  #   url: http://localhost:1200/swift/evolution
+  #   tags: [swift, evolution]
+  # - name: GCC Releases (RSSHub)
+  #   url: http://localhost:1200/gcc/releases
+  #   tags: [gcc, release]
