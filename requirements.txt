@@ -11,3 +11,5 @@ scikit-learn
 numpy
 pyyaml
 psycopg2
+black
+ruff

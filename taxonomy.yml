@@ -1,0 +1,31 @@
+projects:
+  LLVM: [ "(?i)\\bllvm\\b", "(?i)clang", "(?i)mlir" ]
+  GCC: [ "(?i)\\bgcc\\b", "(?i)g\\+\\+" ]
+  Rust: [ "(?i)\\brust\\b", "(?i)rustc", "(?i)cargo" ]
+  Swift: [ "(?i)\\bswift\\b", "(?i)swiftc", "(?i)swift evolution" ]
+  GraalVM: [ "(?i)graalvm", "(?i)graal", "(?i)jvmci" ]
+  V8: [ "(?i)\\bv8\\b", "(?i)turbofan", "(?i)maglev" ]
+  Cranelift/Wasmtime: [ "(?i)cranelift", "(?i)wasmtime", "(?i)wasm" ]
+  Others: [ ".*" ]
+
+topics:
+  Release: [ "(?i)release", "(?i)rc\\d", "(?i)tagged", "(?i)\\bv\\d+\\.\\d+" ]
+  Regression: [ "(?i)regression", "(?i)bug", "(?i)breakage", "(?i)perf\\s*drop", "性能回归", "回退" ]
+  Performance: [ "(?i)performance", "(?i)speedup", "(?i)benchmark", "加速", "优化" ]
+  Backend/Target: [ "(?i)backend", "(?i)target", "(?i)codegen", "(?i)abi", "后端", "目标" ]
+  IR/Pass: [ "(?i)ssa", "(?i)gvn", "(?i)licm", "(?i)sroa", "(?i)instcombine", "(?i)mlir" ]
+  Toolchain: [ "(?i)linker", "(?i)lto", "(?i)sanitizer", "(?i)c\\+\\+\\s*standard", "工具链" ]
+
+arches:
+  RISC-V: [ "(?i)risc-?v", "(?i)rv64", "(?i)rv32" ]
+  ARM64: [ "(?i)arm64", "(?i)aarch64", "(?i)sve" ]
+  x86_64: [ "(?i)x86_64", "(?i)avx", "(?i)sse", "(?i)avx512" ]
+  PowerPC: [ "(?i)powerpc", "(?i)ppc" ]
+  MIPS: [ "(?i)mips" ]
+  WASM: [ "(?i)wasm", "(?i)webassembly" ]
+  GPU: [ "(?i)cuda", "(?i)hip", "(?i)rocm", "(?i)gpu" ]
+
+priority_rules:
+  high:   [ "Regression", "CVE", "Security", "弃用", "deprecat", "ABI", "重大" ]
+  medium: [ "Release", "Backend/Target", "IR/Pass", "Performance" ]
+  low:    [ "Weekly", "survey", "杂项", "misc" ]
