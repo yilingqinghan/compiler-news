@@ -1,20 +1,132 @@
-feeds:
-  - name: LLVM Weekly
-    url: https://llvmweekly.org/atom.xml
-    tags: [llvm, weekly]
-  - name: LWN (headlines)
-    url: https://lwn.net/headlines/newrss
-    tags: [linux, toolchain]
-  - name: Phoronix (all)
-    url: https://www.phoronix.com/rss.php
-    tags: [compiler, performance]
-  - name: Rust Blog
-    url: https://blog.rust-lang.org/feed.xml
-    tags: [rust]
-  # 如果后面第 6 步你起了 RSSHub，这些路由就能用
-  # - name: Swift Forums - Evolution (RSSHub)
-  #   url: http://localhost:1200/swift/evolution
-  #   tags: [swift, evolution]
-  # - name: GCC Releases (RSSHub)
-  #   url: http://localhost:1200/gcc/releases
-  #   tags: [gcc, release]
+# sources.yml —— 只采集 LLVM / GCC
+# 每个源都打好 projects/topics/priority，供后续聚类/索引与前端筛选用
+
+rss:
+  # --- LLVM 官方论坛（Discourse），分类 RSS ---
+  # Discourse 任意分类均可在分类 URL 末尾追加 .rss（官方说明）。
+  - name: llvm-discourse-announcements
+    url: https://discourse.llvm.org/c/announce/46.rss   # Announcements 分类页 slug/ID 验证见分类页。 [oai_citation:0‡LLVM Discussion Forums](https://discourse.llvm.org/c/announce/46)
+    tags:
+      projects: [LLVM]
+      topics: [Announcements, Release, Events]
+    priority: high
+
+  - name: llvm-discourse-clang
+    url: https://discourse.llvm.org/c/clang/6.rss       # Clang Frontend 分类。 [oai_citation:1‡网站名称不能为空。](data:text/plain;charset=utf-8,Invalid%20citation)
+    tags:
+      projects: [LLVM, Clang]
+      topics: [Frontend]
+    priority: medium
+
+  - name: llvm-discourse-codegen
+    url: https://discourse.llvm.org/c/code-generation/51.rss  # Code Generation 分类。 [oai_citation:2‡LLVM Discussion Forums](https://discourse.llvm.org/c/clang/6)
+    tags:
+      projects: [LLVM]
+      topics: [Backend/Target]
+    priority: medium
+
+  - name: llvm-discourse-mlir
+    url: https://discourse.llvm.org/c/mlir/31.rss       # MLIR 分类。 [oai_citation:3‡LLVM Discussion Forums](https://discourse.llvm.org/c/mlir/31)
+    tags:
+      projects: [LLVM, MLIR]
+      topics: [IR/Pass]
+    priority: medium
+
+  # --- LLVM 官方博客（Hugo 站，点页面右上角 Subscribe 即 feed，通常为 /index.xml） ---
+  - name: llvm-blog
+    url: https://blog.llvm.org/index.xml                  # 订阅链接来自站内 “Subscribe”。 [oai_citation:4‡The LLVM Project Blog](https://blog.llvm.org/)
+    tags:
+      projects: [LLVM]
+      topics: [Project News]
+    priority: medium
+
+  # --- LLVM Weekly（每周一） ---
+  - name: llvm-weekly
+    url: http://llvmweekly.org/rss.xml                    # 站点/OPML 中公开的 RSS。 [oai_citation:5‡llvmweekly.org](https://llvmweekly.org/) [oai_citation:6‡Gist](https://gist.github.com/PierreZ/2c757505c18d93340516130ef3ee149d?utm_source=chatgpt.com)
+    tags:
+      projects: [LLVM]
+      topics: [Weekly]
+    priority: medium
+
+  # --- GCC 官方公告/补丁/提交 通知（sourceware public-inbox 提供 Atom） ---
+  - name: gcc-announce
+    url: https://inbox.sourceware.org/gcc-announce/new.atom   # 页面含 “Atom feed” 链接。 [oai_citation:7‡inbox.sourceware.org](https://inbox.sourceware.org/gcc-announce/)
+    tags:
+      projects: [GCC]
+      topics: [Announcements, Release]
+    priority: high
+
+  - name: gcc-patches
+    url: https://inbox.sourceware.org/gcc-patches/new.atom    # 补丁列表 Atom。 [oai_citation:8‡inbox.sourceware.org](https://inbox.sourceware.org/gcc-patches/kfhvf1eg3gd.fsf%40csclub.uwaterloo.ca/?utm_source=chatgpt.com)
+    tags:
+      projects: [GCC]
+      topics: [Patches, Development]
+    priority: medium
+
+  # 可选：高频提交通知（体量大，若噪声过高可先注释掉）
+  - name: gcc-cvs
+    url: https://inbox.sourceware.org/gcc-cvs/new.atom        # Git 提交通知 Atom。 [oai_citation:9‡inbox.sourceware.org](https://inbox.sourceware.org/gcc-cvs/20210307170210.692ED393BC04%40sourceware.org/?utm_source=chatgpt.com)
+    tags:
+      projects: [GCC]
+      topics: [Commits]
+    priority: low
+
+  # --- GitHub 官方 Atom：Releases / Commits ---
+  # GitHub 对 repo 的 Releases 和 Commits 提供 Atom feed（文档/实践均确认）。 [oai_citation:10‡RSSHub 文档](https://docs.rsshub.app/routes/programming?utm_source=chatgpt.com) [oai_citation:11‡Stack Overflow](https://stackoverflow.com/questions/7353538/setting-up-a-github-commit-rss-feed?utm_source=chatgpt.com) [oai_citation:12‡piraces.dev](https://piraces.dev/short-bits/github-releases-feed-atom/?utm_source=chatgpt.com)
+  - name: llvm-github-releases
+    url: https://github.com/llvm/llvm-project/releases.atom   # 官方 monorepo。 [oai_citation:13‡GitHub](https://github.com/llvm/llvm-project?utm_source=chatgpt.com)
+    tags:
+      projects: [LLVM]
+      topics: [Release]
+    priority: high
+
+  - name: llvm-github-commits
+    url: https://github.com/llvm/llvm-project/commits/main.atom
+    tags:
+      projects: [LLVM]
+      topics: [Commits]
+    priority: low
+
+  - name: gcc-github-releases
+    url: https://github.com/gcc-mirror/gcc/releases.atom       # 官方 GitMirror 说明与镜像仓库。 [oai_citation:14‡gcc.gnu.org](https://gcc.gnu.org/wiki/GitMirror?utm_source=chatgpt.com) [oai_citation:15‡GitHub](https://github.com/gcc-mirror/gcc?utm_source=chatgpt.com)
+    tags:
+      projects: [GCC]
+      topics: [Release]
+    priority: high
+
+  - name: gcc-github-commits
+    url: https://github.com/gcc-mirror/gcc/commits/master.atom
+    tags:
+      projects: [GCC]
+      topics: [Commits]
+    priority: low
+
+  # --- 纯“参考/校对”：GCC 官方 Releases 页面（无 RSS，供你渲染页里做交叉链接用） ---
+  # 你的爬虫/抽取层如果支持“页面直抓+diff”，可开启；不支持就保持注释。
+  # - name: gcc-releases-page
+  #   url: https://gcc.gnu.org/releases.html                     # 最新版本列表（含日期）。 [oai_citation:16‡gcc.gnu.org](https://gcc.gnu.org/releases.html?utm_source=chatgpt.com)
+  #   tags:
+  #     projects: [GCC]
+  #     topics: [Release]
+  #   priority: medium
+
+github_repos:  # 如果你的管线里有 GitHub API 拉 PR/Issue 事件的模块，可在此列出
+  - repo: llvm/llvm-project        # 官方 monorepo（PR 在 GitHub 完成 Review）。 [oai_citation:17‡LLVM](https://llvm.org/docs/GitHub.html?utm_source=chatgpt.com)
+    types: [pulls, issues, releases, commits]
+  - repo: gcc-mirror/gcc           # 官方镜像，代码实际主库在 gcc.gnu.org。 [oai_citation:18‡gcc.gnu.org](https://gcc.gnu.org/wiki/GitMirror?utm_source=chatgpt.com)
+    types: [commits, releases]
+
+# 允许域（ingest 层若有 host 白名单功能可启用）
+allow_hosts:
+  - discourse.llvm.org
+  - blog.llvm.org
+  - llvmweekly.org
+  - github.com
+  - inbox.sourceware.org
+  - gcc.gnu.org
+
+# （可选）主题词提示，用于你 summary/classifier 打标签时的提示词库
+topic_hints:
+  projects: [LLVM, Clang, MLIR, GCC]
+  topics: [Release, Announcements, Weekly, Patches, Commits, Frontend, Backend/Target, IR/Pass]
+  arches: [x86_64, ARM64, RISC-V, PowerPC, MIPS, WASM, GPU]

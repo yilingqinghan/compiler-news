@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-cn" data-theme="light">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>编译器周报 {{ start }} ~ {{ end }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { theme:{ extend:{} } }</script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="bg-base-100">
+  <div class="max-w-6xl mx-auto p-4 md:p-6">
+    <div class="flex flex-col md:flex-row gap-4">
+      <!-- 左侧导航 -->
+      <aside class="md:w-64">
+        <div class="sticky top-4 card bg-base-200 shadow">
+          <div class="card-body">
+            <h2 class="card-title">导航</h2>
+            <ul class="menu menu-sm">
+              <li><a href="#top">封面 Top</a></li>
+              {% for g in groups.keys()|list %}
+                <li><a href="#{{ g | replace(' ','-') }}">{{ g }}</a></li>
+              {% endfor %}
+              <li><a href="#sources">数据来源</a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 主区 -->
+      <main class="flex-1">
+        <div id="top" class="mb-6">
+          <h1 class="text-3xl font-bold">编译器周报 <span class="text-base-content/60">{{ start }} ~ {{ end }}</span></h1>
+          <p class="text-base-content/70 mt-1">自动聚合：LLVM 专区、Kernel/Toolchain、Rust 等；仅统计最近一周。</p>
+        </div>
+
+        <!-- 封面 Top -->
+        <section class="grid md:grid-cols-2 gap-4">
+          {% for it in top %}
+          {% set s = it.summary %}
+          <div class="card bg-base-200 shadow">
+            <div class="card-body">
+              <div class="flex items-center gap-2">
+                <h3 class="card-title">{{ s.title or it.title }}</h3>
+                {% set p = s.priority or it.priority %}
+                <div class="badge {{ 'badge-error' if p=='high' else 'badge-warning' if p=='medium' else 'badge-success' }}">{{ p }}</div>
+              </div>
+              {% if s.context %}<p class="text-base-content/70">{{ s.context }}</p>{% endif %}
+              {% if s.key_points %}
+              <ul class="list-disc list-inside text-sm">
+                {% for k in s.key_points[:5] %}<li>{{ k }}</li>{% endfor %}
+              </ul>
+              {% endif %}
+              {% if s.links %}
+                <a class="link" target="_blank" href="{{ s.links[0] }}">{{ s.links[0] }}</a>
+              {% endif %}
+              {% if s.tags %}
+              <div class="mt-2 flex flex-wrap gap-1">
+                {% for t in s.tags %}<div class="badge badge-outline">{{ t }}</div>{% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </section>
+
+        <!-- 分组板块（LLVM 专区优先） -->
+        {% for g, items in groups.items() %}
+        <section id="{{ g | replace(' ','-') }}" class="mt-10">
+          <h2 class="text-2xl font-bold mb-3">{{ g }}</h2>
+          <div class="space-y-3">
+            {% for it in items %}
+              {% set s = it.summary %}
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">{{ s.title or it.title }}</h3>
+                    {% set p = s.priority or it.priority %}
+                    <div class="badge {{ 'badge-error' if p=='high' else 'badge-warning' if p=='medium' else 'badge-success' }}">{{ p }}</div>
+                    <div class="text-xs text-base-content/60">{{ it.latest_ts }}</div>
+                  </div>
+                  {% if s.context %}<p class="text-base-content/70">{{ s.context }}</p>{% endif %}
+                  {% if s.key_points %}
+                    <ul class="list-disc list-inside text-sm">
+                      {% for k in s.key_points %}<li>{{ k }}</li>{% endfor %}
+                    </ul>
+                  {% endif %}
+                  {% if s.links %}
+                    <div class="mt-1 text-sm">
+                      {% for l in s.links %}<a class="link" target="_blank" href="{{ l }}">{{ l }}</a><br/>{% endfor %}
+                    </div>
+                  {% endif %}
+                  {% if s.tags %}
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    {% for t in s.tags %}<div class="badge badge-outline">{{ t }}</div>{% endfor %}
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </section>
+        {% endfor %}
+
+        <!-- 数据来源 -->
+        <section id="sources" class="mt-12">
+          <h2 class="text-2xl font-bold mb-3">数据来源 & 覆盖统计（最近一周）</h2>
+          <div class="overflow-x-auto">
+            <table class="table table-sm">
+              <thead><tr><th>来源</th><th>条数</th></tr></thead>
+              <tbody>
+                {% for (src, cnt) in sources %}
+                  <tr><td>{{ src }}</td><td>{{ cnt }}</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <p class="text-sm text-base-content/60 mt-2">包含：LLVM Discourse、LLVM Blog、LLVM Weekly、GitHub PR/Commits、LWN、Phoronix、Rust Blog …</p>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

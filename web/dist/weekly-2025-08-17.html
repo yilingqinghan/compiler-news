@@ -1,0 +1,1976 @@
+<!doctype html>
+<html lang="zh-cn" data-theme="light">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>编译器周报 2025-08-10 ~ 2025-08-17</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { theme:{ extend:{} } }</script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="bg-base-100">
+  <div class="max-w-6xl mx-auto p-4 md:p-6">
+    <div class="flex flex-col md:flex-row gap-4">
+      <!-- 左侧导航 -->
+      <aside class="md:w-64">
+        <div class="sticky top-4 card bg-base-200 shadow">
+          <div class="card-body">
+            <h2 class="card-title">导航</h2>
+            <ul class="menu menu-sm">
+              <li><a href="#top">封面 Top</a></li>
+              
+                <li><a href="#LLVM-专区">LLVM 专区</a></li>
+              
+                <li><a href="#GCC">GCC</a></li>
+              
+              <li><a href="#sources">数据来源</a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 主区 -->
+      <main class="flex-1">
+        <div id="top" class="mb-6">
+          <h1 class="text-3xl font-bold">编译器周报 <span class="text-base-content/60">2025-08-10 ~ 2025-08-17</span></h1>
+          <p class="text-base-content/70 mt-1">自动聚合：LLVM 专区、Kernel/Toolchain、Rust 等；仅统计最近一周。</p>
+        </div>
+
+        <!-- 封面 Top -->
+        <section class="grid md:grid-cols-2 gap-4">
+          
+          
+          <div class="card bg-base-200 shadow">
+            <div class="card-body">
+              <div class="flex items-center gap-2">
+                <h3 class="card-title">Handle trunc nuw i1 condition in Equality comparison</h3>
+                
+                <div class="badge badge-error">high</div>
+              </div>
+              <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f</p>
+              
+              <ul class="list-disc list-inside text-sm">
+                <li>Handle trunc nuw i1 condition in Equality comparison</li><li>Check if BranchInst is conditional and has one use</li>
+              </ul>
+              
+              
+                <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f">https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f</a>
+              
+              
+              <div class="mt-2 flex flex-wrap gap-1">
+                <div class="badge badge-outline">SimplifyCfg</div><div class="badge badge-outline">Equality comparison</div><div class="badge badge-outline">Truncate condition</div><div class="badge badge-outline">BranchInst</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+              </div>
+              
+            </div>
+          </div>
+          
+          
+          <div class="card bg-base-200 shadow">
+            <div class="card-body">
+              <div class="flex items-center gap-2">
+                <h3 class="card-title">clang[bytecode] 固定伪析构函数调用在非指针上的问题</h3>
+                
+                <div class="badge badge-error">high</div>
+              </div>
+              <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17</p>
+              
+              <ul class="list-disc list-inside text-sm">
+                <li>修复了伪析构函数在非指针上的调用问题</li><li>涉及clang和bytecode领域</li>
+              </ul>
+              
+              
+                <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17">https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17</a>
+              
+              
+              <div class="mt-2 flex flex-wrap gap-1">
+                <div class="badge badge-outline">clang</div><div class="badge badge-outline">bytecode</div><div class="badge badge-outline">伪析构函数</div><div class="badge badge-outline">内存错误</div><div class="badge badge-outline">安全漏洞</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+              </div>
+              
+            </div>
+          </div>
+          
+          
+          <div class="card bg-base-200 shadow">
+            <div class="card-body">
+              <div class="flex items-center gap-2">
+                <h3 class="card-title">[TableGen][DecoderEmitter] Improve conflicts dump</h3>
+                
+                <div class="badge badge-error">high</div>
+              </div>
+              <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/ea4325f174baca7d12e128db4f9f3b41a918da67</p>
+              
+              <ul class="list-disc list-inside text-sm">
+                <li>Improve conflicts dump functionality in the TableGen and DecoderEmitter components of the LLVM project</li><li>Introduce a new function `dumpBits` that allows specifying the bit width for printing</li>
+              </ul>
+              
+              
+                <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/ea4325f174baca7d12e128db4f9f3b41a918da67">https://github.com/llvm/llvm-project/commit/ea4325f174baca7d12e128db4f9f3b41a918da67</a>
+              
+              
+              <div class="mt-2 flex flex-wrap gap-1">
+                <div class="badge badge-outline">TableGen</div><div class="badge badge-outline">DecoderEmitter</div><div class="badge badge-outline">conflicts</div><div class="badge badge-outline">dump</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+              </div>
+              
+            </div>
+          </div>
+          
+          
+          <div class="card bg-base-200 shadow">
+            <div class="card-body">
+              <div class="flex items-center gap-2">
+                <h3 class="card-title">[TableGen] Make a function static (NFC)</h3>
+                
+                <div class="badge badge-warning">medium</div>
+              </div>
+              <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/05f1673e7569da0762d2a5d890ca4860760dad34</p>
+              
+              <ul class="list-disc list-inside text-sm">
+                <li>Function 'fieldFromInsn' is marked as static</li><li>Namespace scope for constexpr variable declaration</li>
+              </ul>
+              
+              
+                <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/05f1673e7569da0762d2a5d890ca4860760dad34">https://github.com/llvm/llvm-project/commit/05f1673e7569da0762d2a5d890ca4860760dad34</a>
+              
+              
+              <div class="mt-2 flex flex-wrap gap-1">
+                <div class="badge badge-outline">TableGen</div><div class="badge badge-outline">static function</div><div class="badge badge-outline">NFC (Next Function Commit)</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+              </div>
+              
+            </div>
+          </div>
+          
+          
+          <div class="card bg-base-200 shadow">
+            <div class="card-body">
+              <div class="flex items-center gap-2">
+                <h3 class="card-title">Interest In Setting Spray Products</h3>
+                
+                <div class="badge badge-success">Medium</div>
+              </div>
+              <p class="text-base-content/70">A mailing list with various email addresses and domains related to different perfume and skincare businesses has been notified of an interest in setting up spray products.</p>
+              
+              <ul class="list-disc list-inside text-sm">
+                <li>Notification about interest in setting up spray products</li><li>Addresses and domains involved are primarily related to perfume and skincare businesses</li><li>Emails include a wide range of professionals from various companies</li>
+              </ul>
+              
+              
+                <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/5ae86caa.5e0.198b673b7bb.Coremail.bessiex@vip.163.com/">https://inbox.sourceware.org/gcc-patches/5ae86caa.5e0.198b673b7bb.Coremail.bessiex@vip.163.com/</a>
+              
+              
+              <div class="mt-2 flex flex-wrap gap-1">
+                <div class="badge badge-outline">Perfume</div><div class="badge badge-outline">Skincare</div><div class="badge badge-outline">Industry Collaboration</div><div class="badge badge-outline">Email Notification</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Toolchain</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">GPU</div><div class="badge badge-outline">Linux Kernel</div><div class="badge badge-outline">low</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+              </div>
+              
+            </div>
+          </div>
+          
+          
+          <div class="card bg-base-200 shadow">
+            <div class="card-body">
+              <div class="flex items-center gap-2">
+                <h3 class="card-title">[TableGen][DecoderEmitter] Dump conflicts earlier</h3>
+                
+                <div class="badge badge-warning">medium</div>
+              </div>
+              <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/05827e7ccb4e1295648e38b11ebdbb8fd817177b</p>
+              
+              <ul class="list-disc list-inside text-sm">
+                <li>Dumping conflicts in the decoder emitter earlier</li><li>Handling instruction decoding failures</li><li>Emitting state machine entries for instructions</li><li>Choosing the best filter to decode the instructions</li>
+              </ul>
+              
+              
+                <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/05827e7ccb4e1295648e38b11ebdbb8fd817177b">https://github.com/llvm/llvm-project/commit/05827e7ccb4e1295648e38b11ebdbb8fd817177b</a>
+              
+              
+              <div class="mt-2 flex flex-wrap gap-1">
+                <div class="badge badge-outline">TableGen</div><div class="badge badge-outline">DecoderEmitter</div><div class="badge badge-outline">Instruction Decoding</div><div class="badge badge-outline">Conflict Handling</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+              </div>
+              
+            </div>
+          </div>
+          
+          
+          <div class="card bg-base-200 shadow">
+            <div class="card-body">
+              <div class="flex items-center gap-2">
+                <h3 class="card-title">[clang] Fix typos in OMPClauseProfiler method names for consistency</h3>
+                
+                <div class="badge badge-warning">medium</div>
+              </div>
+              <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/3d83dbb73610c6cfb1b67252bd2d519a0aa5e308</p>
+              
+              <ul class="list-disc list-inside text-sm">
+                <li>Fixed typos in OMPClauseProfiler method names for consistency in clang project.</li><li>Updated method names from 'Vist' to 'Visit'.</li>
+              </ul>
+              
+              
+                <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/3d83dbb73610c6cfb1b67252bd2d519a0aa5e308">https://github.com/llvm/llvm-project/commit/3d83dbb73610c6cfb1b67252bd2d519a0aa5e308</a>
+              
+              
+              <div class="mt-2 flex flex-wrap gap-1">
+                <div class="badge badge-outline">clang</div><div class="badge badge-outline">OpenMP</div><div class="badge badge-outline">compiler</div><div class="badge badge-outline">bug-fix</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">low</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+              </div>
+              
+            </div>
+          </div>
+          
+          
+          <div class="card bg-base-200 shadow">
+            <div class="card-body">
+              <div class="flex items-center gap-2">
+                <h3 class="card-title">[TableGen][DecoderEmitter] Shrink lifetime of `Filters` vector (NFC)</h3>
+                
+                <div class="badge badge-warning">medium</div>
+              </div>
+              <p class="text-base-content/70">This commit modifies the `FilterChooser` class within the LLVM project, specifically targeting the `Filters` vector. The changes aim to reduce the lifecycle of this vector by moving some related logic and variables outside it, improving code organization and potentially enhancing performance or readability.</p>
+              
+              <ul class="list-disc list-inside text-sm">
+                <li>Shrink lifetime of `Filters` vector</li><li>Move selected filter details into a unique pointer variable named `BestFilter`</li><li>Remove references to `BestIndex`, `Filters`, and move the initialization of `BestFilter` and other properties from within the constructor to outside it</li>
+              </ul>
+              
+              
+                <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/fc6024d8959cdb82e5421787882288e26ee728bc">https://github.com/llvm/llvm-project/commit/fc6024d8959cdb82e5421787882288e26ee728bc</a>
+              
+              
+              <div class="mt-2 flex flex-wrap gap-1">
+                <div class="badge badge-outline">TableGen</div><div class="badge badge-outline">DecoderEmitter</div><div class="badge badge-outline">NFC (Not For Commit)</div><div class="badge badge-outline">llvm-project</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+              </div>
+              
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- 分组板块（LLVM 专区优先） -->
+        
+        <section id="LLVM-专区" class="mt-10">
+          <h2 class="text-2xl font-bold mb-3">LLVM 专区</h2>
+          <div class="space-y-3">
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Handle trunc nuw i1 condition in Equality comparison</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 07:53:40</div>
+                  </div>
+                  <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Handle trunc nuw i1 condition in Equality comparison</li><li>Check if BranchInst is conditional and has one use</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f">https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">SimplifyCfg</div><div class="badge badge-outline">Equality comparison</div><div class="badge badge-outline">Truncate condition</div><div class="badge badge-outline">BranchInst</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">clang[bytecode] 固定伪析构函数调用在非指针上的问题</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 06:47:57</div>
+                  </div>
+                  <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>修复了伪析构函数在非指针上的调用问题</li><li>涉及clang和bytecode领域</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17">https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">clang</div><div class="badge badge-outline">bytecode</div><div class="badge badge-outline">伪析构函数</div><div class="badge badge-outline">内存错误</div><div class="badge badge-outline">安全漏洞</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">[TableGen][DecoderEmitter] Improve conflicts dump</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 06:42:25</div>
+                  </div>
+                  <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/ea4325f174baca7d12e128db4f9f3b41a918da67</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Improve conflicts dump functionality in the TableGen and DecoderEmitter components of the LLVM project</li><li>Introduce a new function `dumpBits` that allows specifying the bit width for printing</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/ea4325f174baca7d12e128db4f9f3b41a918da67">https://github.com/llvm/llvm-project/commit/ea4325f174baca7d12e128db4f9f3b41a918da67</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">TableGen</div><div class="badge badge-outline">DecoderEmitter</div><div class="badge badge-outline">conflicts</div><div class="badge badge-outline">dump</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">[TableGen] Make a function static (NFC)</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 06:31:28</div>
+                  </div>
+                  <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/05f1673e7569da0762d2a5d890ca4860760dad34</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Function 'fieldFromInsn' is marked as static</li><li>Namespace scope for constexpr variable declaration</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/05f1673e7569da0762d2a5d890ca4860760dad34">https://github.com/llvm/llvm-project/commit/05f1673e7569da0762d2a5d890ca4860760dad34</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">TableGen</div><div class="badge badge-outline">static function</div><div class="badge badge-outline">NFC (Next Function Commit)</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">[TableGen][DecoderEmitter] Dump conflicts earlier</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 05:20:31</div>
+                  </div>
+                  <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/05827e7ccb4e1295648e38b11ebdbb8fd817177b</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Dumping conflicts in the decoder emitter earlier</li><li>Handling instruction decoding failures</li><li>Emitting state machine entries for instructions</li><li>Choosing the best filter to decode the instructions</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/05827e7ccb4e1295648e38b11ebdbb8fd817177b">https://github.com/llvm/llvm-project/commit/05827e7ccb4e1295648e38b11ebdbb8fd817177b</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">TableGen</div><div class="badge badge-outline">DecoderEmitter</div><div class="badge badge-outline">Instruction Decoding</div><div class="badge badge-outline">Conflict Handling</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">[clang] Fix typos in OMPClauseProfiler method names for consistency</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 05:01:59</div>
+                  </div>
+                  <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/3d83dbb73610c6cfb1b67252bd2d519a0aa5e308</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Fixed typos in OMPClauseProfiler method names for consistency in clang project.</li><li>Updated method names from 'Vist' to 'Visit'.</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/3d83dbb73610c6cfb1b67252bd2d519a0aa5e308">https://github.com/llvm/llvm-project/commit/3d83dbb73610c6cfb1b67252bd2d519a0aa5e308</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">clang</div><div class="badge badge-outline">OpenMP</div><div class="badge badge-outline">compiler</div><div class="badge badge-outline">bug-fix</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">low</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">[TableGen][DecoderEmitter] Shrink lifetime of `Filters` vector (NFC)</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 04:02:16</div>
+                  </div>
+                  <p class="text-base-content/70">This commit modifies the `FilterChooser` class within the LLVM project, specifically targeting the `Filters` vector. The changes aim to reduce the lifecycle of this vector by moving some related logic and variables outside it, improving code organization and potentially enhancing performance or readability.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Shrink lifetime of `Filters` vector</li><li>Move selected filter details into a unique pointer variable named `BestFilter`</li><li>Remove references to `BestIndex`, `Filters`, and move the initialization of `BestFilter` and other properties from within the constructor to outside it</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/fc6024d8959cdb82e5421787882288e26ee728bc">https://github.com/llvm/llvm-project/commit/fc6024d8959cdb82e5421787882288e26ee728bc</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">TableGen</div><div class="badge badge-outline">DecoderEmitter</div><div class="badge badge-outline">NFC (Not For Commit)</div><div class="badge badge-outline">llvm-project</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">[clang-format] Add OneLineFormatOffRegex to format-off section</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 03:59:07</div>
+                  </div>
+                  <p class="text-base-content/70">This commit adds the `OneLineFormatOffRegex` option in the `format-off` section of clang-format, providing a concise way to disable formatting for lines that match a regular expression. It also changes documentation regarding when clang-format is turned off or back on.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Add `OneLineFormatOffRegex` option</li><li>Provides a concise way to disable formatting for matching regex lines</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/ee51f35993d9623563551f9bb9521824992967b6">https://github.com/llvm/llvm-project/commit/ee51f35993d9623563551f9bb9521824992967b6</a><br/><a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/29d49c8a37335c22f0a1d974968ecaa6310fca6a">https://github.com/llvm/llvm-project/commit/29d49c8a37335c22f0a1d974968ecaa6310fca6a</a><br/><a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/ddae3b74a396512b7578f4ccb5ce0e8b57234962">https://github.com/llvm/llvm-project/commit/ddae3b74a396512b7578f4ccb5ce0e8b57234962</a><br/><a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/1c8da29f48e3ad295371f612785f7f13f16db9d2">https://github.com/llvm/llvm-project/commit/1c8da29f48e3ad295371f612785f7f13f16db9d2</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">clang-format</div><div class="badge badge-outline">format-off</div><div class="badge badge-outline">regex</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">编译器修复与改进</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 01:52:07</div>
+                  </div>
+                  <p class="text-base-content/70">此材料概述了涉及libc++编译器的一系列问题和修复。这些问题包括类型定义、约束条件以及模板函数等。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>LWG3751: 缺少 ``flat_set`` 的特性宏</li><li>LWG3746: optional 's spaceship with U 归因于从 optional 导出的类型导致无限约束递归问题</li><li>LWG3747: 建议使用 ``std::move`` 来替代某些函数</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/f3008c11406440959f6fc2120dd2117df6fa11ce">https://github.com/llvm/llvm-project/commit/f3008c11406440959f6fc2120dd2117df6fa11ce</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">编译器</div><div class="badge badge-outline">libc++</div><div class="badge badge-outline">LWG</div><div class="badge badge-outline">特性宏</div><div class="badge badge-outline">约束条件</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">low</div><div class="badge badge-outline">GPU</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">编译器维护更新</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 00:07:15</div>
+                  </div>
+                  <p class="text-base-content/70">以上是一些关于GCC和Clang编译器的维护更新记录，涉及RISC-V优化、静态分析改进以及内存安全问题。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>修复了RISC-V中的vx组合模式missed DONE指示符问题</li><li>更新了RISC-V中的vx组合模式支持指令列表</li><li>[Clang][Sema]检查了DiagnoseClassNameShadow的返回值</li><li>解决了一种情况下编译gcobol程序时产生的内存未初始化读取警告</li><li>在macOSX12.3 SDK下，对包含头文件<_stdio.h>进行跳过处理</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/756f771f58f79406a08b6d574939b70d895bb613">https://github.com/gcc-mirror/gcc/commit/756f771f58f79406a08b6d574939b70d895bb613</a><br/><a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/38d76a4e6033016b5e2dcaae57df67075a605edd">https://github.com/gcc-mirror/gcc/commit/38d76a4e6033016b5e2dcaae57df67075a605edd</a><br/><a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/f8740920eec94f04752ad7bf1b86de9587412b1c">https://github.com/llvm/llvm-project/commit/f8740920eec94f04752ad7bf1b86de9587412b1c</a><br/><a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/810340f9fed56dc2a0e7e1db3f19b383f6e4cb95">https://github.com/gcc-mirror/gcc/commit/810340f9fed56dc2a0e7e1db3f19b383f6e4cb95</a><br/><a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/e905d7ee2bd428a9a31a993053a8da926733fb61">https://github.com/gcc-mirror/gcc/commit/e905d7ee2bd428a9a31a993053a8da926733fb61</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">编译器更新</div><div class="badge badge-outline">RISC-V优化</div><div class="badge badge-outline">静态分析改进</div><div class="badge badge-outline">内存安全问题</div><div class="badge badge-outline">GCC维护</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">low</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">M68k编译器增强：添加PCD地址模式任何扩展模式</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 23:33:47</div>
+                  </div>
+                  <p class="text-base-content/70">此更新针对M68k架构的LLVM库（llvm/llvm-project），引入了新的anyext模式以处理PCD（Position-Dependent Code）地址模式。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>新增用于PCD地址模式的zext（零扩展）和anyext（任何扩展）函数</li><li>增加了两个新函数：@test_anyext_pcd_i8_to_i16 和 @test_anyext_pcd_i8_to_i32</li><li>这些函数分别演示了如何将i8数据转换为i16和i32，通过zext和anyext模式</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/bc3754de0aed44147e64b99414ecb06f84ab1a91">https://github.com/llvm/llvm-project/commit/bc3754de0aed44147e64b99414ecb06f84ab1a91</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">LLVM</div><div class="badge badge-outline">M68k架构</div><div class="badge badge-outline">编译器增强</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">[Github] Remove call to llvm-project-tests.yml from spirv-tests.yml</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 22:52:39</div>
+                  </div>
+                  <p class="text-base-content/70">This is a GitHub Actions workflow change where the call to `llvm-project-tests.yml` in `spirv-tests.yml` has been removed. The aim is to eventually eliminate `llvm-project-tests.yml`, which should simplify these workflows at the cost of some duplication in GitHub Actions.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Remove call to llvm-project-tests.yml from spirv-tests.yml</li><li>Will eventually allow for removing llvm-project-tests.yml</li><li>Should reduce complexity in workflows</li><li>May introduce some duplicate steps</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/1f5047e43092f39a60a0ddba921610c2ab00897e">https://github.com/llvm/llvm-project/commit/1f5047e43092f39a60a0ddba921610c2ab00897e</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GitHub Actions</div><div class="badge badge-outline">Workflow Changes</div><div class="badge badge-outline">Spirv-Tools</div><div class="badge badge-outline">llvm-project-tests.yml</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">MCSymbol: Remove unused IsTarget parameter from declareCommon</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 22:47:39</div>
+                  </div>
+                  <p class="text-base-content/70">This commit removes an unused parameter, IsTarget, from the declareCommon function in the MCSymbol module of the LLVM project. The change is part of a series that aims to clean up and optimize the codebase.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Remove unused parameter IsTarget</li><li>Commit ID: 2cedb286b8a37a3c6f09ac394b5e95413baac287</li><li>LLVM project module: MCSymbol</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/2cedb286b8a37a3c6f09ac394b5e95413baac287">https://github.com/llvm/llvm-project/commit/2cedb286b8a37a3c6f09ac394b5e95413baac287</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">LLVM</div><div class="badge badge-outline">MCSymbol</div><div class="badge badge-outline">Commit</div><div class="badge badge-outline">Optimization</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">MCSymbol 编译器符号类的更新</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 22:39:33</div>
+                  </div>
+                  <p class="text-base-content/70">GitHub上两个关于llvm/llvm-project库的commit信息，分别涉及对`MCSymbol`类中`Kind::TargetCommon`字段移除和`SymContents`名称改为`kind`。这些变更改进了编译器的内部实现，使得编译过程更加高效。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Kind::TargetCommon 字段被移除</li><li>SymContentsEnum 被更改为 Kind 类型的 unsigned bitfield</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/aa96e20dcefa7d73229c98a7d2727696ff949459">https://github.com/llvm/llvm-project/commit/aa96e20dcefa7d73229c98a7d2727696ff949459</a><br/><a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/190778a8ba6d30995b7e1b4b4a556ab6444bdf3a">https://github.com/llvm/llvm-project/commit/190778a8ba6d30995b7e1b4b4a556ab6444bdf3a</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">编译器</div><div class="badge badge-outline">LLVM项目</div><div class="badge badge-outline">MCSymbol类更新</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">GPU</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">Linux Kernel</div><div class="badge badge-outline">low</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">TableGen DecoderEmitter 添加工作于作用域的帮助者（NFC）</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 21:49:17</div>
+                  </div>
+                  <p class="text-base-content/70">这些方法用于在编译过程中管理作用域，确保所有当前作用域内的修复值（Fixups）能正确地调整到目标位置。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>新增 'pushScope()' 方法</li><li>新增 'popScope()' 方法</li><li>修复值调整机制</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/7bb73455f76c8ce3b470fb931daa68a33ec79c34">https://github.com/llvm/llvm-project/commit/7bb73455f76c8ce3b470fb931daa68a33ec79c34</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">TableGen</div><div class="badge badge-outline">编译器优化</div><div class="badge badge-outline">作用域管理</div><div class="badge badge-outline">修复值调整</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Add test for #153946</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 20:19:20</div>
+                  </div>
+                  <p class="text-base-content/70">https://github.com/llvm/llvm-project/commit/73775a0f2749d0cc8b8877bf34ebb3534a2e7913</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Add test for issue #153946 in LLVM project</li><li>Test involves loop vectorization with different widths and interleave factors</li><li>Test case addresses issues related to masking and early exit conditions in vector loops</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/commit/73775a0f2749d0cc8b8877bf34ebb3534a2e7913">https://github.com/llvm/llvm-project/commit/73775a0f2749d0cc8b8877bf34ebb3534a2e7913</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">LLVM</div><div class="badge badge-outline">Loop Vectorization</div><div class="badge badge-outline">Optimization</div><div class="badge badge-outline">Test Case</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">clang[test] Location of Clang debug-info tests</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 17:33:21</div>
+                  </div>
+                  <p class="text-base-content/70">Currently the Clang debug-info tests are spread across a couple of directories: I see the reasoning behind putting debug-info tests into the CodeGen directories since the debug-info generation lives in clang/lib/CodeGen, but should they be centralized under one directory? The clang/test/DebugInfo tests were recently introduced for the KeyInstructions work. It also aligns with where the LLVM debug-info tests live. How people would feel about moving these tests to a central directory?</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Currently Clang debug-info tests are spread across multiple directories.</li><li>The reason for placing them in CodeGen directories is that debug-info generation happens there.</li><li>Recently introduced clang/test/DebugInfo tests for KeyInstructions work.</li><li>Aligns with where LLVM's debug-info tests live.</li><li>Questions about centralizing the tests under a single directory or having language-specific subdirectories.</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/clang-test-location-of-clang-debug-info-tests/87958">https://discourse.llvm.org/t/clang-test-location-of-clang-debug-info-tests/87958</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">Clang</div><div class="badge badge-outline">DebugInfo tests</div><div class="badge badge-outline">CodeGen</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Clang-tidy misc-use-anonymous-namespace</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-15 15:27:02</div>
+                  </div>
+                  <p class="text-base-content/70">Discussion about a Clang-tidy check that conflicts with LLVM's coding standard, leading to the creation of a new check: llvm-prefer-static-over-anonymous-namespace.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Existing clang-tidy check (misc-use-anonymous-namespace) is disabled due to conflict with LLVM's coding standards.</li><li>The need for a reverse check to flag file local functions in anonymous namespaces that should be made static has been identified.</li><li>A new check, llvm-prefer-static-over-anonymous-namespace, was created to address this issue.</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/clang-tidy-misc-use-anonymous-namespace/87947">https://discourse.llvm.org/t/clang-tidy-misc-use-anonymous-namespace/87947</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">Clang-tidy</div><div class="badge badge-outline">Anonymous namespace</div><div class="badge badge-outline">Static function</div><div class="badge badge-outline">LLVM coding standard</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">LLVM 21.1.0-rc3 发布</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-15 12:40:38</div>
+                  </div>
+                  <p class="text-base-content/70">LLVM是一个广泛使用的开源编译器基础设施，版本21.1.0-rc3发布，并提供了针对不同平台的二进制安装包。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>多个平台（包括Linux和ARM64）提供二进制安装包</li><li>每个平台对应一个特定的二进制文件名格式（如LLVM-21.1.0-rc3-Linux-ARM64.tar.xz）</li><li>Windows平台上使用不同的二进制命名约定（如LLVM-*.exe作为安装器，clang+llvm-包含完整内容）</li><li>源代码包也提供：21.1.0-rc3.src.tar.xz包含特定子项目的源代码</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/llvm/llvm-project/releases/tag/llvmorg-21.1.0-rc3">https://github.com/llvm/llvm-project/releases/tag/llvmorg-21.1.0-rc3</a><br/><a class="link" target="_blank" href="LLVM Discourse论坛上的社区构建包讨论">LLVM Discourse论坛上的社区构建包讨论</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">编译器基础设施</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">版本发布</div><div class="badge badge-outline">二进制安装包</div><div class="badge badge-outline">源代码包</div><div class="badge badge-outline">ARM64</div><div class="badge badge-outline">Release</div><div class="badge badge-outline">medium</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Impact of ffp-contract defaults on benchmarking</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-14 13:11:15</div>
+                  </div>
+                  <p class="text-base-content/70">https://discourse.llvm.org/t/impact-of-ffp-contract-defaults-on-benchmarking/87906</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Clang defaults to -ffp-contract=on for C/C++, disabling forming fused multiply-add across statements</li><li>GCC defaults to -ffp-contract=fast unless the std C dialect is set via e.g. std=c11</li><li>The difference in dynamically executed instructions affects SPEC CPU 2017 benchmarks such as namd and lbm significantly</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/impact-of-ffp-contract-defaults-on-benchmarking/87906">https://discourse.llvm.org/t/impact-of-ffp-contract-defaults-on-benchmarking/87906</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">Compiler Defaults</div><div class="badge badge-outline">Benchmarking</div><div class="badge badge-outline">FFP-Contract</div><div class="badge badge-outline">SPEC CPU 2017</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">GPU</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">medium</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">Performance</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">RFC Emit a warning when -fsanitize-trap=<...> is passed without associated -fsanitize=<...></h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-13 21:20:55</div>
+                  </div>
+                  <p class="text-base-content/70">The discussion revolves around the behavior of Clang driver, which currently silently ignores the -fsanitize-trap= flag if it is used alone. The motivation behind this RFC suggests that instead of ignoring such flags, a warning should be issued to alert developers about the unused flag.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>-fsanitize-trap= is an Undefined Behavior Sanitizer (UBSan) flag enabling trapping UBSan</li><li>-fsanitize-trap= without -fsanitize=<...> does nothing and currently ignored by Clang driver</li><li>The proposed change would issue a warning if -fsanitize-trap= is used alone, similar to how unused flags are flagged in other cases</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/rfc-emit-a-warning-when-fsanitize-trap-is-passed-without-associated-fsanitize/87893">https://discourse.llvm.org/t/rfc-emit-a-warning-when-fsanitize-trap-is-passed-without-associated-fsanitize/87893</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">Clang</div><div class="badge badge-outline">Undefined Behavior Sanitizer (UBSan)</div><div class="badge badge-outline">Compiler Flags</div><div class="badge badge-outline">Warnings and Errors</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Toolchain</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">high</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">RISC-V LLVM Sync-Up Call on August 14th 2025</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-13 19:37:51</div>
+                  </div>
+                  <p class="text-base-content/70">A sync-up call was scheduled for RISC-V LLVM on August 14th, 2025. The call will be held as usual with an agenda and dial-in details provided in the Google Doc.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>RISC-V LLVM sync-up call scheduled for August 14th, 2025</li><li>Call will be held as per previous RISC-V LLVM calls</li><li>Agenda and dial-in information can be found on the Google Doc</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/risc-v-llvm-sync-up-call-august-14th-2025/87891">https://discourse.llvm.org/t/risc-v-llvm-sync-up-call-august-14th-2025/87891</a><br/><a class="link" target="_blank" href="Agenda / Notes - Google Docs">Agenda / Notes - Google Docs</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">RISC-V LLVM</div><div class="badge badge-outline">LLVM Discussion Forums</div><div class="badge badge-outline">Code Generation</div><div class="badge badge-outline">Sync-Up Call</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">low</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">RFC: Support cheriot target triple as subarchitecture of riscv32</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-13 12:44:06</div>
+                  </div>
+                  <p class="text-base-content/70">Following a broader RFC for upstreaming CHERI, there is discussion on adding support for the CHERIoT in LLVM's target triple. CHERIoT is a full system architecture for a RISCV32E microcontroller.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Proposed addition of riscv32cheriotv1-unknown-unknown and riscv32cheriotv1-unknown-cheriotrtos triples to LLVM's target triple</li><li>Proposal includes parsing riscv32cheriot-... as an alias for riscv32cheriotv1-...</li><li>CHERIoT extends (and restricts) the instruction set, changes calling conventions, and alters capability and permission formats.</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/rfc-support-cheriot-target-triple-as-subarchitecture-of-riscv32/87883">https://discourse.llvm.org/t/rfc-support-cheriot-target-triple-as-subarchitecture-of-riscv32/87883</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">CHERI</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">Target Triple</div><div class="badge badge-outline">Microcontroller</div><div class="badge badge-outline">Upstreaming</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">high</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Thread safety analysis and std::weak_ptr</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-12 19:10:03</div>
+                  </div>
+                  <p class="text-base-content/70">A discussion about thread-safe annotations for a project using std::weak_ptr, which does not support PT_GUARDED_BY.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>std::weak_ptr doesn't expose operator* and operator-> methods.</li><li>PT_GUARDED_BY check requires a type that supports these operators (like pointers or those implementing them).</li><li>Alias analysis could potentially be used but is currently unsupported by the project.</li><li>The current solution does not work, as checking the weak_ptr's underlying type fails due to lack of operator* and operator-> methods.</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/thread-safety-analysis-and-std-weak-ptr/87864">https://discourse.llvm.org/t/thread-safety-analysis-and-std-weak-ptr/87864</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">thread safety</div><div class="badge badge-outline">std::weak_ptr</div><div class="badge badge-outline">alias analysis</div><div class="badge badge-outline">PT_GUARDED_BY</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">high</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">我的即将到来的可用性</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-12 15:42:36</div>
+                  </div>
+                  <p class="text-base-content/70">https://discourse.llvm.org/t/my-upcoming-availability/87851</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>WG14 (C)标准会议期间，下周将有两天的工作时间减少。</li><li>在8月25日至9月初这段时间内，由于学术休假，我将不再回复电子邮件。</li><li>如果需要紧急处理的问题，请在9月份结束后重新尝试联系。</li><li>在此期间，可以由其他维护者或@clang-area-team团队负责我可能需要处理的任务。</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/my-upcoming-availability/87851">https://discourse.llvm.org/t/my-upcoming-availability/87851</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">WG14</div><div class="badge badge-outline">学术休假</div><div class="badge badge-outline">电子邮件延迟处理</div><div class="badge badge-outline">维护者合作</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">high</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">LLVM 21.1.0-rc3 Released!</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-12 09:16:56</div>
+                  </div>
+                  <p class="text-base-content/70">We are happy to announce that LLVM 21.1.0-rc3 is now released, including main LLVM project and its subprojects such as clang, lld, libc++, and MLIR. Download sources on GitHub or find binaries later in a specific forum thread.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>LLVM 21.1.0-rc3 release</li><li>Includes main LLVM project and its subprojects: clang, lld, libc++, and MLIR</li><li>Binary availability note</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/llvm-21-1-0-rc3-released/87826">https://discourse.llvm.org/t/llvm-21-1-0-rc3-released/87826</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">LLVM</div><div class="badge badge-outline">clang</div><div class="badge badge-outline">lld</div><div class="badge badge-outline">libc++</div><div class="badge badge-outline">MLIR</div><div class="badge badge-outline">release</div><div class="badge badge-outline">RC</div><div class="badge badge-outline">subprojects</div><div class="badge badge-outline">Release</div><div class="badge badge-outline">medium</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Does calling finalizeBundle in a custom inserter keep an instruction sequence intact and bypass pre-Ra transforms?</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-12 01:38:17</div>
+                  </div>
+                  <p class="text-base-content/70">https://discourse.llvm.org/t/does-calling-finalizebundle-in-a-custom-inserter-keep-an-instruction-sequence-intact-and-bypass-pre-ra-transforms/87822</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>The approach of wrapping an instruction sequence in a finalizeBundle to make it atomic to the pipeline and set MIFlag::NoMerge on all bundled instructions.</li><li>Pre-RA passes like peephole, CSE, sinking or scheduling should not affect the bundled instructions.</li><li>Using bundles is intended to preserve the sequence's semantics and layout until register allocation (RA) completes.</li><li>It’s recommended to expand pseudo-instructions post-RA if possible.</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/does-calling-finalizebundle-in-a-custom-inserter-keep-an-instruction-sequence-intact-and-bypass-pre-ra-transforms/87822">https://discourse.llvm.org/t/does-calling-finalizebundle-in-a-custom-inserter-keep-an-instruction-sequence-intact-and-bypass-pre-ra-transforms/87822</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">LLVM</div><div class="badge badge-outline">Compiler</div><div class="badge badge-outline">Register Allocation</div><div class="badge badge-outline">Pre-Ra Transformations</div><div class="badge badge-outline">Pseudo Instructions</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">high</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Using GOTPCREL relocations for personality and typeinfo eh_frame references?</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-11 21:52:06</div>
+                  </div>
+                  <p class="text-base-content/70">Discussion on using GOTPCREL relocations to handle personality and typeinfo pointers in Clang's eh_frame sections, specifically addressing issues with deduplication and write permissions.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Typeinfo pointers are emitted directly under the .data section without being deduplicated across compile units</li><li>Personality pointer is emitted in its own COMDAT section but still within the writable .data section on AArch64</li><li>On AArch64, indirect references to these pointers use sdata8 encoding, which supports up to 4 GB of code and data separation even in the small code model</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/using-gotpcrel-relocations-for-personality-and-typeinfo-eh-frame-references/87820">https://discourse.llvm.org/t/using-gotpcrel-relocations-for-personality-and-typeinfo-eh-frame-references/87820</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">Compiler</div><div class="badge badge-outline">GOTPCREL</div><div class="badge badge-outline">Clang</div><div class="badge badge-outline">EH Frame</div><div class="badge badge-outline">Deduplication</div><div class="badge badge-outline">Write Permissions</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Toolchain</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">ARM64</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">high</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">LLVM Weekly #606 - August 11th 2025</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-11 21:50:00</div>
+                  </div>
+                  <p class="text-base-content/70">This is the six hundred and sixth issue of LLVM Weekly, a weekly newsletter covering developments in LLVM, Clang, and related projects. It includes articles from Rafael Andres Herrera Guaitero on CARTS (Compiler Architecture for Runtime Systems), updates about an upcoming Portland area LLVM social event, and a summary of planned activities for the coming week such as Office hours with different hosts, online sync-ups on various topics including MLIR C/C++ frontend working group, ClangIR upstreaming, alias analysis, pointer authentication, 64-bit source locations, OpenMP, Flang, BOLT, RISC-V, embedded toolchains, and HLSL.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>CARTS (Compiler Architecture for Runtime Systems)</li><li>Enabling Event-Driven Task and Data Block Compilation for Distributed HPC</li><li>Next Portland area LLVM social event on August 14th</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://llvmweekly.org/issue/606">https://llvmweekly.org/issue/606</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">CARTS</div><div class="badge badge-outline">HPC</div><div class="badge badge-outline">LLVM Weekly</div><div class="badge badge-outline">Portland area LLVM social event</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">high</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Cannot Build Simple hello.cpp Inside Chroot Env</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-11 17:31:25</div>
+                  </div>
+                  <p class="text-base-content/70">A user reports issues building a simple 'hello.cpp' file inside an environment created with chroot. The issue arises because the required system libraries are missing or not properly specified as dependencies for the clang package.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>User is unable to build 'hello.cpp' in a chrooted env</li><li>The environment uses llvm/clang version 14.0.6</li><li>Missing system libraries affect compilation process</li><li>Real issue lies with missing libraries rather than issues with clang itself</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://discourse.llvm.org/t/i-cant-build-simple-hello-cpp-inside-chrooted-env/87815">https://discourse.llvm.org/t/i-cant-build-simple-hello-cpp-inside-chrooted-env/87815</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">compilation</div><div class="badge badge-outline">chroot env</div><div class="badge badge-outline">clang</div><div class="badge badge-outline">missing dependencies</div><div class="badge badge-outline">Toolchain</div><div class="badge badge-outline">ARM64</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">low</div><div class="badge badge-outline">LLVM</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+          </div>
+        </section>
+        
+        <section id="GCC" class="mt-10">
+          <h2 class="text-2xl font-bold mb-3">GCC</h2>
+          <div class="space-y-3">
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Interest In Setting Spray Products</h3>
+                    
+                    <div class="badge badge-success">Medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 05:33:04</div>
+                  </div>
+                  <p class="text-base-content/70">A mailing list with various email addresses and domains related to different perfume and skincare businesses has been notified of an interest in setting up spray products.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Notification about interest in setting up spray products</li><li>Addresses and domains involved are primarily related to perfume and skincare businesses</li><li>Emails include a wide range of professionals from various companies</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/5ae86caa.5e0.198b673b7bb.Coremail.bessiex@vip.163.com/">https://inbox.sourceware.org/gcc-patches/5ae86caa.5e0.198b673b7bb.Coremail.bessiex@vip.163.com/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">Perfume</div><div class="badge badge-outline">Skincare</div><div class="badge badge-outline">Industry Collaboration</div><div class="badge badge-outline">Email Notification</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Toolchain</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">GPU</div><div class="badge badge-outline">Linux Kernel</div><div class="badge badge-outline">low</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">[PATCH] testsuite: Fix PR108080 testcase for some targets [PR121396]</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 03:14:19</div>
+                  </div>
+                  <p class="text-base-content/70">This patch addresses a warning in the GCC test suite related to unsupported 'gnu::optimize' or 'gnu::target' attributes on certain targets. Nathaniel Shead added a new testcase to help identify these issues.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Fixes warning for unsupported attributes in the testsuite</li><li>Adjusts warnings for targets producing target nodes with only optimize attribute present</li><li>Tests performed on x86_64-pc-linux-gnu and powerpc64-linux-gnu cross-compilation</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/aKFI6Rs9TJ738ig-@Thaum.localdomain/">https://inbox.sourceware.org/gcc-patches/aKFI6Rs9TJ738ig-@Thaum.localdomain/</a><br/><a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/aKFHLF0bECl6JNza@Thaum.localdomain/">https://inbox.sourceware.org/gcc-patches/aKFHLF0bECl6JNza@Thaum.localdomain/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">TestSuite</div><div class="badge badge-outline">ModuleSupport</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Toolchain</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">Linux Kernel</div><div class="badge badge-outline">low</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">PowerPC</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">GCC 编译器改进提案</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 02:41:25</div>
+                  </div>
+                  <p class="text-base-content/70">Jeff Law 发送了一封主题为 [PATCH 2/3] ira: tie output allocnos for fused instruction pairs 的邮件，讨论了如何通过将输出分配号关联到融合指令对来提高 GCC 编译器的效能。在回复中，Artemiy Volkov 提到了关于使用 PREV_INSN 和 prev_nonnote_nondebug_insn 的潜在问题以及这些方案的安全性考虑。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>讨论了如何通过将输出分配号关联到融合指令对来提高 GCC 编译器的效能</li><li>提及在 scheduler 中使用 PREV_INSN 可能会导致笔记、线标记等出现在两个融合指令之间的问题</li><li>建议使用 prev_nonnote_nondebug_insn 作为替代方案，因为它可能会遇到走过了基本块边界的风险</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/e685c33c-9539-417f-b5c2-8b0ee979aa74@gmail.com/">https://inbox.sourceware.org/gcc-patches/e685c33c-9539-417f-b5c2-8b0ee979aa74@gmail.com/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC 编译器</div><div class="badge badge-outline">PATCH</div><div class="badge badge-outline">IRA (Instruction Reassociation Algorithm)</div><div class="badge badge-outline">fusion</div><div class="badge badge-outline">PREV_INSN</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Toolchain</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">ARM64</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">high</div><div class="badge badge-outline">Linux Kernel</div><div class="badge badge-outline">Regression</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">ira: tie output allocnos for fused instruction pairs</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 02:40:28</div>
+                  </div>
+                  <p class="text-base-content/70">You signed out in another tab or window. Reload to refresh your session.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Instruction pairs recognized as fusible by a preceding invocation of the dep_fusion pass require both components have the same hard register output for fusion to work in hardware.</li><li>For all such pairs, the following conditions will hold: (a) Both insns are single_sets (b) Both insns have a register destination (c) The pair has been marked as fusible by setting the second insn's SCHED_GROUP flag</li><li>(d) Additionally, post-RA, both instructions' destination regnos are equal.</li><li>During IRA, if conditions (a)-(c) hold, we need to tie the two instructions' destination allocnos together so that they are allocated to the same hard register.</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/07a0baa7609a5a78d8b4a3c17897768fb2119605">https://github.com/gcc-mirror/gcc/commit/07a0baa7609a5a78d8b4a3c17897768fb2119605</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">gcc</div><div class="badge badge-outline">compilation</div><div class="badge badge-outline">fused instruction pairs</div><div class="badge badge-outline">IRA (Instruction Reordering and Allocation)</div><div class="badge badge-outline">hardware optimization</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div><div class="badge badge-outline">GCC</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">[PATCH] RISC-V: Fix block matching in arch-canonicalize [PR121538]</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 02:30:14</div>
+                  </div>
+                  <p class="text-base-content/70">The patch addresses issues with parsing conditional blocks for the riscv-ext*.def file. The initial regular expression used to match C++ lambda functions was too simple, causing it to only capture the first code block within braces. This led to incorrect handling of the 'c' extension dependency which includes two separate code blocks (one for RV32 and one for RV64). As a result, arch-canonicalize incorrectly added 'd' as an extra extension.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Initial regular expression was too simple</li><li>Only captured first block within braces</li><li>Incorrectly parsed 'c' dependency with two blocks</li><li>Leads to incorrect addition of 'd' extension</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/14b15a9a473fc69b0251e625c397e70c396f0c0c">https://github.com/gcc-mirror/gcc/commit/14b15a9a473fc69b0251e625c397e70c396f0c0c</a><br/><a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/CA+yXCZBvnUS96jDDpm5AYAfO_MDXdbfzF5pRXPmyWcnhAaCFCg@mail.gmail.com/">https://inbox.sourceware.org/gcc-patches/CA+yXCZBvnUS96jDDpm5AYAfO_MDXdbfzF5pRXPmyWcnhAaCFCg@mail.gmail.com/</a><br/><a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/20250816130439.734251-1-dimitar@dinux.eu/">https://inbox.sourceware.org/gcc-patches/20250816130439.734251-1-dimitar@dinux.eu/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">Compiler</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">Patch</div><div class="badge badge-outline">Conditional Parsing</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">RISC-V 编译器优化：修复块匹配</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 02:27:54</div>
+                  </div>
+                  <p class="text-base-content/70">关于对 GCC 的 RISC-V 编译器模块进行优化，特别是在处理块匹配功能方面的一个补丁更新。该补丁由 Kito Cheng 提交，并获得了 LGTM 的认可，确认可以合并到 trunk 主干版本中。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>LGTM 对 PR121538 补丁的认可</li><li>补丁主要用于修复 RISC-V 架构中的块匹配功能</li><li>预提交 CI 报告失败但 Kito Cheng 认为与 PR 的关系不大</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/0c26667e-f5eb-4ab9-a4a6-8428ea598055@gmail.com/">https://inbox.sourceware.org/gcc-patches/0c26667e-f5eb-4ab9-a4a6-8428ea598055@gmail.com/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">补丁</div><div class="badge badge-outline">编译器优化</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">x86: Add target("80387") function attribute</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 01:29:16</div>
+                  </div>
+                  <p class="text-base-content/70">You signed in with another tab or window. Reload to refresh your session.You signed out in another tab or window. Reload to refresh your session.You switched accounts on another tab or window. Reload to refresh your sess</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>You signed in with another tab or window</li><li>Reload to refresh your session</li><li>You signed out in another tab or window</li><li>Reload to refresh your session</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/38e8115dd2bfaa05146f8d085106189f46c25f52">https://github.com/gcc-mirror/gcc/commit/38e8115dd2bfaa05146f8d085106189f46c25f52</a><br/><a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/CAMZc-bxXqx0qZ7YXeYXFBacu=iCcrfHQL3mLFggMgx=aGpscjg@mail.gmail.com/">https://inbox.sourceware.org/gcc-patches/CAMZc-bxXqx0qZ7YXeYXFBacu=iCcrfHQL3mLFggMgx=aGpscjg@mail.gmail.com/</a><br/><a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/CAMe9rOohnnvb7UyA9sERFmcbCbahPFJPXzfknwwmY8kSUmRM1g@mail.gmail.com/">https://inbox.sourceware.org/gcc-patches/CAMe9rOohnnvb7UyA9sERFmcbCbahPFJPXzfknwwmY8kSUmRM1g@mail.gmail.com/</a><br/><a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/CAMZc-byVk4frRMJr+v897OKjXqe=G3grN3Hr0wOMmM7nkG3Y0A@mail.gmail.com/">https://inbox.sourceware.org/gcc-patches/CAMZc-byVk4frRMJr+v897OKjXqe=G3grN3Hr0wOMmM7nkG3Y0A@mail.gmail.com/</a><br/><a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/CAMZc-by_-qGU+QOfH51NLkiAyrBEJSmbf14-F=Dv1fpLR9EJ0w@mail.gmail.com/">https://inbox.sourceware.org/gcc-patches/CAMZc-by_-qGU+QOfH51NLkiAyrBEJSmbf14-F=Dv1fpLR9EJ0w@mail.gmail.com/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">x86_64</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">PATCH: x86: Place the TLS call before all FLAGS_REG setting BBs</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 00:48:15</div>
+                  </div>
+                  <p class="text-base-content/70">A patch has been submitted to GCC's x86 compiler, aiming to place a Thread Local Storage (TLS) call at the beginning of basic blocks that dominate the current basic block. This is necessary because placing a TLS call before conditional jumps within a basic block could lead to clobbering of the register used for FLAGS, which would make it impossible.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Need to place TLS calls before all register setting BBs which dominate the current one</li><li>Avoiding conflicts with conditional jumps and other instructions that might affect flags register</li><li>Check for REG_DEAD notes in addition to searching for clobbers of the FLAGS register</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/20250817004804.3710369-1-hjl.tools@gmail.com/">https://inbox.sourceware.org/gcc-patches/20250817004804.3710369-1-hjl.tools@gmail.com/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">x86</div><div class="badge badge-outline">TLS</div><div class="badge badge-outline">Compiler Optimization</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">GCC 编译器更新记录</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 00:19:17</div>
+                  </div>
+                  <p class="text-base-content/70">该日志记录了GCC编译器的一个提交，涉及多个文件的修改。这些更改主要集中在对RISC-V架构的支持和改进。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>添加自己的信息到MAINTAINERS列表（部分记录）</li><li>在config/riscv/autovec-opt.md中添加vx combine支持的新 insn（部分记录）</li><li>修改cp-tree.h以适应枚举类型的链接用途</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/b42c5ee445f6de5a2a0b4f9ab16dc19c3c6c615b">https://github.com/gcc-mirror/gcc/commit/b42c5ee445f6de5a2a0b4f9ab16dc19c3c6c615b</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">编译器更新</div><div class="badge badge-outline">RISC-V架构</div><div class="badge badge-outline">MAINTAINERS列表修改</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">high</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">GCC 编译器中Unnamed Unscoped Enums的链接变化实现</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-17 00:14:14</div>
+                  </div>
+                  <p class="text-base-content/70">This commit is part of the GCC compiler's development, specifically addressing changes for unnamed unscoped enums. It involves checking and handling anonymous enum types in the compiler.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Introduces checks to ensure TYPE_UNNAMED_P (type) or enum_with_enumerator_for_linkage_p (type)</li><li>Adjusts assert conditions based on the type being checked</li><li>Updates comments to reflect changes in logic</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/7921bb4afcb7a3be8e10e63b10acfc2bfa477cae">https://github.com/gcc-mirror/gcc/commit/7921bb4afcb7a3be8e10e63b10acfc2bfa477cae</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">C++</div><div class="badge badge-outline">Compiler</div><div class="badge badge-outline">Unnamed Unscoped Enums</div><div class="badge badge-outline">Linkage Changes</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">fortran: Set DECL_TLS_MODEL after processing a variable</h3>
+                    
+                    <div class="badge badge-success">low</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 21:24:09</div>
+                  </div>
+                  <p class="text-base-content/70">This is a discussion thread about an issue in the Fortran compiler where the `set_decl_tls_model` function was called incorrectly during the processing of variables. The problem has been identified and patches have been proposed to correct this.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Incorrect placement of `set_decl_tls_model` function</li><li>Call `set_decl_tls_model` after fully processing a variable</li><li>Fix in `trans-common.cc` and `trans-decl.cc` files</li><li>New test case added for the issue in `gfortran.dg/gomp/pr107421.f90`</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/2e567a06555ac92105e6264fc219a2d5131e1b4e">https://github.com/gcc-mirror/gcc/commit/2e567a06555ac92105e6264fc219a2d5131e1b4e</a><br/><a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/20250816190737.Xd57DQRINDDHOT6YcnZS_YRD0gt3HYv9gsumWkBqU8w@z/">https://inbox.sourceware.org/gcc-patches/20250816190737.Xd57DQRINDDHOT6YcnZS_YRD0gt3HYv9gsumWkBqU8w@z/</a><br/><a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/49313fc2-1ca0-41d5-839f-a3cd9569d771@gmx.de/">https://inbox.sourceware.org/gcc-patches/49313fc2-1ca0-41d5-839f-a3cd9569d771@gmx.de/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">x86_64</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">[PATCH v2] c++: Fix ICE on mangling invalid compound requirement [PR120618]</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 21:02:19</div>
+                  </div>
+                  <p class="text-base-content/70">This is a patch for the GCC compiler, addressing an issue where parsing invalid type-constraints in C++ code resulted in a compile error. The root cause was an Internal Compiler Error (ICE). The fix involves setting the trailing return type to NULL_TREE when encountering a type-constraint instead of a return-type-requirement, allowing some contexts to satisfy the constraint and prevent redundant errors.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Fixes ICE on mangling invalid compound requirement in C++ code</li><li>Sets trailing return type to NULL_TREE for invalid type-constraints</li><li>Allows valid constraints to be satisfied without redundantly reporting errors</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/CAD+gk=hBM+j_ffw3E+2Fpm3JvvWBLsSrOhViNjXXoqLdF5UbxA@mail.gmail.com/">https://inbox.sourceware.org/gcc-patches/CAD+gk=hBM+j_ffw3E+2Fpm3JvvWBLsSrOhViNjXXoqLdF5UbxA@mail.gmail.com/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">C++</div><div class="badge badge-outline">ICE</div><div class="badge badge-outline">compilation errors</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">[PATCH] Rewrite bool loads for undefined case</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 17:33:13</div>
+                  </div>
+                  <p class="text-base-content/70">This patch addresses the issue of boolean load expressions that were originally conditional and needed to be changed into unconditional ones. The change involves handling the conversion from conditional loads to full loads and then casting them back to a boolean type.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Handling boolean loads that are initially defined as undefined</li><li>Replacing conditional boolean loads with unconditional boolean loads</li><li>Using build_ref_for_offset if it supported adding statements into sequence for better compatibility</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/20250816173252.957313-1-andrew.pinski@oss.qualcomm.com/">https://inbox.sourceware.org/gcc-patches/20250816173252.957313-1-andrew.pinski@oss.qualcomm.com/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">gcc</div><div class="badge badge-outline">gimple-fold</div><div class="badge badge-outline">PR121279</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">high</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">GCC 编译器测试用例更新：关于默认参数部分的P1766R1 [PR121552]</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 15:08:09</div>
+                  </div>
+                  <p class="text-base-content/70">讨论了针对GCC编译器中与默认参数相关的一部分新增测试用例。涉及的是一个名为P1766R1的PATCH，此PATCH旨在补充C++标准中关于默认参数部分的内容。讨论的核心是判断某些情况下是否应该出现错误信息，以及是否需要添加新的测试用例来覆盖这些情况。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>讨论了新增测试用例的具体内容</li><li>澄清了在不同源文件中相同默认参数定义的情况下是否应被视为错误的问题</li><li>确认了一些情况下默认参数的定义不会违反C++标准中的同对象规则（ODR）</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/61bd26fc-5ce9-411a-b9b9-576ba0849418@redhat.com/">https://inbox.sourceware.org/gcc-patches/61bd26fc-5ce9-411a-b9b9-576ba0849418@redhat.com/</a><br/><a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/aKCaWqXPQ9xO6fkF@tucnak/">https://inbox.sourceware.org/gcc-patches/aKCaWqXPQ9xO6fkF@tucnak/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">编译器测试用例</div><div class="badge badge-outline">C++20标准</div><div class="badge badge-outline">默认参数</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">支持AArch64对svbool_t的操作</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 14:51:43</div>
+                  </div>
+                  <p class="text-base-content/70">该patch系列关注在AArch64架构上对svbool_t类型的支持，特别是C/C++操作。它涵盖了从基本类型的转换到复杂的二元和三元运算。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>引入c_common_bool_type函数以根据精度和有符号性确定适当的通用布尔类型</li><li>更新c-family/c-common.cc文件以支持向量布尔类型用于__builtin_convertvector()</li><li>在c-family/c-common.h声明c_common_bool_type</li><li>修改c/c-typeck.cc和cp/typeck.cc文件以支持向量布尔类型的操作</li><li>更新config/aarch64/aarch64-sve-builtins.cc文件，使其矢量布尔类型等同于GNU的向量类型</li><li>在aarch64-sve.md文件中添加新的模式以支持额外操作在命题模式上</li><li>创建aarch64_valid_vector_boolean_op和aarch64_invalid_unary_op函数来验证向量布尔类型的合理性</li><li>定义aarch64_convert_to_type以处理标准到非标准布尔类型的转换</li><li>更新cp/call.cc文件，使其支持矢量布尔类型</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/55f55046-c71f-44b7-ae7a-4dd43526e0c8@redhat.com/">https://inbox.sourceware.org/gcc-patches/55f55046-c71f-44b7-ae7a-4dd43526e0c8@redhat.com/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">AArch64</div><div class="badge badge-outline">C/C++</div><div class="badge badge-outline">SVE</div><div class="badge badge-outline">ARM64</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Re: [PATCH v2] c++: Implement P2115R0 linkage changes for unnamed unscoped enums</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 13:25:06</div>
+                  </div>
+                  <p class="text-base-content/70">This email thread discusses a PATCH proposal to add support for unnamed unscoped enum types in C++, specifically addressing the linkage changes mentioned in P2115R0. The discussion includes feedback and alternative suggestions from Nathaniel Shead, who experimented with caching the property as a TYPE_LANG_FLAG for ENUMERAL_TYPEs, which he claims was possibly neater at the cost of using up a flag bit.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Discussion about adding support for unnamed unscoped enum types in C++</li><li>Proposed patch to implement P2115R0 linkage changes</li><li>Feedback on alternative patch suggestions and their pros and cons</li><li>Current status: Implementation only covers modules changes, further implementation needed for full P2115R0 standard</li><li>Production usage suggestion proposed for distinguishing the types</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/5186a8f9-6fc5-481b-84fc-76d84038adec@redhat.com/">https://inbox.sourceware.org/gcc-patches/5186a8f9-6fc5-481b-84fc-76d84038adec@redhat.com/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">C++</div><div class="badge badge-outline">P2115R0</div><div class="badge badge-outline">Unnamed unscoped enums</div><div class="badge badge-outline">GCC compiler patches</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">high</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">GCC 编译器测试用例：默认参数部分</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 13:14:27</div>
+                  </div>
+                  <p class="text-base-content/70">This event involves a patch submission to the GCC compiler, which adds test cases related to default arguments in C++20. The context is focused on ensuring that the new features are correctly diagnosed and behave as expected under various conditions.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>添加了测试用例来验证C++20中默认参数的功能</li><li>确保在同一单元文件（TU）中的多个默认参数能被正确诊断</li><li>处理模块和直接模板导出的默认参数的行为</li><li>不包括不同值的默认参数比较，因为这依赖于其他功能</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/b6aea1c7-6712-44a3-a6ed-ad6e1d2d3ae5@redhat.com/">https://inbox.sourceware.org/gcc-patches/b6aea1c7-6712-44a3-a6ed-ad6e1d2d3ae5@redhat.com/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">C++20</div><div class="badge badge-outline">默认参数</div><div class="badge badge-outline">测试用例</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">low</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">PATCH: libcpp: Improve locations for macros defined prior to PCH include</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 12:37:46</div>
+                  </div>
+                  <p class="text-base-content/70">This patch addresses an issue where macros defined before the inclusion of a Precompiled Header (PCH) in GCC's compilation process were not correctly located by the linemap code. The original PR was about an Internal Compiler Error (ICE). The new patch introduces changes to ensure these macros are properly identified and restored after the PCH is included.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Improving macro location assignment in GCC for definitions prior to a PCH inclusion</li><li>Ensuring that all defined macros, including those from a PCH, are correctly handled</li><li>The patch requires bootstrap testing on x86-64 and aarch64 (Linux) platforms</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/CAA_5UQ4Rr1Bd8nTXyFvsLDA=REiDZuLRTmrV76y3DJBhh3TW+Q@mail.gmail.com/">https://inbox.sourceware.org/gcc-patches/CAA_5UQ4Rr1Bd8nTXyFvsLDA=REiDZuLRTmrV76y3DJBhh3TW+Q@mail.gmail.com/</a><br/><a class="link" target="_blank" href="https://gcc.gnu.org/pipermail/gcc-patches/2025-July/691235.html">https://gcc.gnu.org/pipermail/gcc-patches/2025-July/691235.html</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">Compiler Internals</div><div class="badge badge-outline">Macros</div><div class="badge badge-outline">Precompiled Headers (PCH)</div><div class="badge badge-outline">Location Assignment</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">ARM64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Re: [PATCH v1 0/2] Refine the vx combine pattern</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 10:44:52</div>
+                  </div>
+                  <p class="text-base-content/70">This is a patch series that refines the vx combine pattern used in GCC's autovec optimization for RISC-V architecture. The patches include updates to comments and adding missing DONE indicators.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Add missed DONE indicator</li><li>Update comments of vx combine pattern</li><li>RISC-V architecture specific</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/CA+yXCZCPMeNk6Mx_f2Pmah4YVXL-Zi4zUVow57GNCQBpffzQBg@mail.gmail.com/">https://inbox.sourceware.org/gcc-patches/CA+yXCZCPMeNk6Mx_f2Pmah4YVXL-Zi4zUVow57GNCQBpffzQBg@mail.gmail.com/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">autovec optimization</div><div class="badge badge-outline">PATCH</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">PATCH 2/3: ira: tie output allocnos for fused instruction pairs</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 10:16:12</div>
+                  </div>
+                  <p class="text-base-content/70">https://inbox.sourceware.org/gcc-patches/aKBaYYrbBSrKJnKZ@homesrv1/</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Patch is about tying the output allocnos for fused instruction pairs in the ira (Instruction Reaching Analysis) module</li><li>Concerns were raised regarding the use of PREV_INSN in relation to notes and line markers between fusible instructions</li><li>Suggested change from using PREV_INSN to prev_nonnote_nondebug_insn due to potential issues outside the scheduler context, such as walking past BB markers</li><li>Issues with comparing debug information have been considered</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/aKBaYYrbBSrKJnKZ@homesrv1/">https://inbox.sourceware.org/gcc-patches/aKBaYYrbBSrKJnKZ@homesrv1/</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">gcc</div><div class="badge badge-outline">patch</div><div class="badge badge-outline">ira</div><div class="badge badge-outline">fused instructions</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">ARM64</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">high</div><div class="badge badge-outline">Regression</div><div class="badge badge-outline">Performance</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">MAINTAINERS: Add myself to write after approval</h3>
+                    
+                    <div class="badge badge-success">low</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 09:18:53</div>
+                  </div>
+                  <p class="text-base-content/70">Two commits related to adding the author's name in the MAINTAINERS file of GCC (GNU Compiler Collection). The first commit was on Sourceware.org and the second one on GitHub.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Added the author's name, Mikael Pettersson (mikpelinux@gmail.com), to the MAINTAINERS file</li><li>The addition is approved and will be written after approval</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://inbox.sourceware.org/gcc-patches/20250816091715.1374740-2-mikpelinux@gmail.com/">https://inbox.sourceware.org/gcc-patches/20250816091715.1374740-2-mikpelinux@gmail.com/</a><br/><a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/dc3d8daa4af9639a3e76272bd31afaae469ad6e0">https://github.com/gcc-mirror/gcc/commit/dc3d8daa4af9639a3e76272bd31afaae469ad6e0</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">MAINTAINERS</div><div class="badge badge-outline">Commit history</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">GCC 编译器更新</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-16 00:19:12</div>
+                  </div>
+                  
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>+ 文档：增强类型特性文档，修复错误121552</li><li>+ 补丁：添加 __builtin_structured_binding_size 函数</li><li>+ 补丁：针对PR c++/121552进行修改</li><li>+ 文档：修正 -Wno-non-c-typedef-for-linkage 的文档说明</li><li>+ 补丁：在 real_to_decimal_for_mode 中设置 str[0] 为已知值，修复 PR target/121534</li><li>+ 补丁：保存和恢复 fflags，在 mips prefetch 操作中使用 round_pattern（PR target/121534）</li><li>+ 补丁：在 doc/extend.texi 中扩展 counted_by 属性到结构体的指针字段，并增加一个关于指针的新的要求</li><li>+ 补丁：添加 MIPS 预取扩展（mips prefetch），修复 PR target/121534，更新相关配置文件</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/5529a1d36f25ca244076cc1d59061b1443f471a5">https://github.com/gcc-mirror/gcc/commit/5529a1d36f25ca244076cc1d59061b1443f471a5</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">编译器</div><div class="badge badge-outline">文档更新</div><div class="badge badge-outline">类型特性支持</div><div class="badge badge-outline">MIPS架构优化</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">MIPS</div><div class="badge badge-outline">low</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Implement __builtin_structured_binding_size trait</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-15 20:38:41</div>
+                  </div>
+                  <p class="text-base-content/70">A commit on the GCC repository introduces a new trait for handling structured binding size in C++.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Introduced a new trait for structured binding size (CPTK_STRUCTURED_BINDING_SIZE)</li><li>Handling of this trait is included in the finish_trait_expr function</li><li>The change affects traits related to array rank, type order, and structured binding size</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/9a8b436b005b56e5ec3d8274284ae3afb4e7ba72">https://github.com/gcc-mirror/gcc/commit/9a8b436b005b56e5ec3d8274284ae3afb4e7ba72</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">C++</div><div class="badge badge-outline">Structured Binding Size</div><div class="badge badge-outline">Trait</div><div class="badge badge-outline">Compiler Update</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">c++: Add testcases for the defarg part of P1766R1 [PR121552]</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-15 20:37:42</div>
+                  </div>
+                  <p class="text-base-content/70">A patch has been added to GitHub repository gcc-mirror/gcc, which introduces new test cases related to default arguments (both function and template) in C++. The tests aim to ensure that the compiler correctly diagnoses multiple default arguments within a translation unit (TU), as well as when they are visible across modules. This includes handling cases where some default arguments are not visible but still considered equal, thus ensuring proper diagnostic behavior.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>New testcases added for default argument functionality in C++</li><li>Ensures correct diagnosis of multiple default arguments within a translation unit</li><li>Tests visibility and equality of default arguments across modules</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/91b5fc4ae2e5c8693cc0b619562f15f90c0fdfaa">https://github.com/gcc-mirror/gcc/commit/91b5fc4ae2e5c8693cc0b619562f15f90c0fdfaa</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">C++</div><div class="badge badge-outline">Compiler Testing</div><div class="badge badge-outline">Default Arguments</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div><div class="badge badge-outline">GCC</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">C++20 P1766R1 - Mitigating minor modules maladies</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-15 20:36:18</div>
+                  </div>
+                  <p class="text-base-content/70">A commit on the GCC (GNU Compiler Collection) repository, specifically addressing issues with minor modules in C++20.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>Handling unnamed class defined within a structure declaration</li><li>Error message for static data member ' ::a' in an unnamed class</li><li>Warning about anonymous non-C-compatible type given name by typedef declaration</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/828c48f0680e209e96bcb76a232665ed047e92cc">https://github.com/gcc-mirror/gcc/commit/828c48f0680e209e96bcb76a232665ed047e92cc</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">C++</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">Minor modules maladies</div><div class="badge badge-outline">P1766R1</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">low</div><div class="badge badge-outline">IR/Pass</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Fix default argument parsing in non-comma variadic methods</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-15 20:34:59</div>
+                  </div>
+                  <p class="text-base-content/70">A fix for the issue of default argument parsing in non-comma variadic functions/methods was implemented in GCC. The fix addresses a deprecation issue where non-comma variadic functions were considered invalid.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>The fix is part of the C++26 deprecation, though the syntax is still valid for older versions (C++98 to C++23).</li><li>Non-comma variadic methods are parsed correctly outside of classes or for out-of-class definitions of methods.</li><li>In cases where ... appears followed by ) without a closing bracket, it is considered part of the default argument and causes an error.</li><li>The fix involves setting done to true when encountering CPP_ELLIPSIS followed by CPP_CLOSE_PAREN at depth 0 in !nsdmi (non-scope-dependent macro instantiation).</li><li>A new test case was created for this issue.</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/4bed19cf6170541ff757ee1b21d9fec9eb0c6541">https://github.com/gcc-mirror/gcc/commit/4bed19cf6170541ff757ee1b21d9fec9eb0c6541</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">c++, gcc, variadic methods, parsing, default arguments, C++ deprecation</div><div class="badge badge-outline">high</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">Others</div><div class="badge badge-outline">GCC</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Warn on #undef/#define of remaining cpp.predefined macros</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-15 20:31:27</div>
+                  </div>
+                  <p class="text-base-content/70">https://github.com/gcc-mirror/gcc/commit/cdd015c4ddbb1ae71eea1e44654cee5ca29a6c64</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>#undef/#define of remaining cpp.predefined macros will be warned about in GCC</li><li>Changes involve encoding definitions, wide execution character set names, and standard definition macros</li><li>Support for C++ dialect with version major number is added</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/cdd015c4ddbb1ae71eea1e44654cee5ca29a6c64">https://github.com/gcc-mirror/gcc/commit/cdd015c4ddbb1ae71eea1e44654cee5ca29a6c64</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">C++</div><div class="badge badge-outline">Safety</div><div class="badge badge-outline">Macros</div><div class="badge badge-outline">Compilation warnings</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">Cobol 编译器代码更改</h3>
+                    
+                    <div class="badge badge-success">low</div>
+                    <div class="text-xs text-base-content/60">2025-08-15 19:41:07</div>
+                  </div>
+                  <p class="text-base-content/70">此变更发生在GCC项目中，涉及Cobol编译器部分。具体来说，移除了不再使用的运行时结构类型。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>移除不再使用的Cobol编译器中的运行时结构类型</li><li>变更文件位于GitHub上的gcc-mirror/gcc仓库</li><li>变更包含大约28行代码的修改</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/87f354ca75361faa2f40b826d632fbc49a082553">https://github.com/gcc-mirror/gcc/commit/87f354ca75361faa2f40b826d632fbc49a082553</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">Cobol</div><div class="badge badge-outline">GCC</div><div class="badge badge-outline">编译器</div><div class="badge badge-outline">代码变更</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">RISC-V: fix __builtin_round clobbering FP exceptions flags</h3>
+                    
+                    <div class="badge badge-error">high</div>
+                    <div class="text-xs text-base-content/60">2025-08-15 17:40:35</div>
+                  </div>
+                  <p class="text-base-content/70">This commit addresses a problem with the GCC compiler's handling of the built-in function `__builtin_round`, specifically in relation to how it interacts with floating-point exception flags (fflags). The issue was identified as `__builtin_round()` failing to properly save and restore fflags around an FP compare instruction, which could potentially lead to clobbering these flags. This commit aims to correct this behavior by altering the placement of flag restoration instructions.</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>__builtin_round() can inadvertently clobber floating-point exception (fflags) flags</li><li>GCC compiler needs to save and restore fflags correctly around FP compare operations</li><li>The specific code change involves adjusting where fflags are restored within the function</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/f5696e9b1113b0a8e464cabb8cc26c871b1d9289">https://github.com/gcc-mirror/gcc/commit/f5696e9b1113b0a8e464cabb8cc26c871b1d9289</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">RISC-V</div><div class="badge badge-outline">Floating Point</div><div class="badge badge-outline">Compiler Fixes</div><div class="badge badge-outline">FP Exceptions Flags</div><div class="badge badge-outline">Backend/Target</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+              
+              <div class="card bg-base-100 border border-base-200">
+                <div class="card-body">
+                  <div class="flex items-center gap-2">
+                    <h3 class="card-title">GCC编译器中关于.FAM与.counted_by属性的更改</h3>
+                    
+                    <div class="badge badge-warning">medium</div>
+                    <div class="text-xs text-base-content/60">2025-08-15 15:28:10</div>
+                  </div>
+                  <p class="text-base-content/70">此更改涉及GCC编译器中的代码，目的是在特定情况下生成对.FAM结构体的操作。改动位于.cfile文件中，主要的变化是处理了COMPONENT_REF结构和handle_counted_by_p函数。这些改动旨在确保当需要读取时，才会触发对.FAM结构的访问。</p>
+                  
+                    <ul class="list-disc list-inside text-sm">
+                      <li>改动发生在GCC编译器中的.cfile文件</li><li>目的是在特定情况下生成对.FAM结构体的操作</li><li>更改处理了COMPONENT_REF结构和handle_counted_by_p函数</li>
+                    </ul>
+                  
+                  
+                    <div class="mt-1 text-sm">
+                      <a class="link" target="_blank" href="https://github.com/gcc-mirror/gcc/commit/1b34664c6255a7c1802e377be439f0d474dde0bb">https://github.com/gcc-mirror/gcc/commit/1b34664c6255a7c1802e377be439f0d474dde0bb</a><br/>
+                    </div>
+                  
+                  
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    <div class="badge badge-outline">GCC</div><div class="badge badge-outline">C文件处理</div><div class="badge badge-outline">.ACCESS_WITH_SIZE</div><div class="badge badge-outline">.FAM</div><div class="badge badge-outline">COMPONENT_REF</div><div class="badge badge-outline">x86_64</div><div class="badge badge-outline">low</div><div class="badge badge-outline">Others</div>
+                  </div>
+                  
+                </div>
+              </div>
+            
+          </div>
+        </section>
+        
+
+        <!-- 数据来源 -->
+        <section id="sources" class="mt-12">
+          <h2 class="text-2xl font-bold mb-3">数据来源 & 覆盖统计（最近一周）</h2>
+          <div class="overflow-x-auto">
+            <table class="table table-sm">
+              <thead><tr><th>来源</th><th>条数</th></tr></thead>
+              <tbody>
+                
+                  <tr><td>gcc-patches</td><td>25</td></tr>
+                
+                  <tr><td>gcc-github-commits</td><td>20</td></tr>
+                
+                  <tr><td>llvm-github-commits</td><td>20</td></tr>
+                
+                  <tr><td>llvm-discourse-announcements</td><td>10</td></tr>
+                
+                  <tr><td>llvm-discourse-clang</td><td>8</td></tr>
+                
+                  <tr><td>llvm-discourse-codegen</td><td>3</td></tr>
+                
+                  <tr><td>llvm-github-releases</td><td>3</td></tr>
+                
+                  <tr><td>gcc-announce</td><td>2</td></tr>
+                
+                  <tr><td>llvm-weekly</td><td>1</td></tr>
+                
+              </tbody>
+            </table>
+          </div>
+          <p class="text-sm text-base-content/60 mt-2">包含：LLVM Discourse、LLVM Blog、LLVM Weekly、GitHub PR/Commits、LWN、Phoronix、Rust Blog …</p>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
