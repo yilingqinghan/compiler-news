@@ -19,3 +19,4 @@ meilisearch
 tldextract
 bs4
 lxml
+langdetect
