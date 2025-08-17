@@ -13,3 +13,7 @@ pyyaml
 psycopg2
 black
 ruff
+pyyaml
+rich
+meilisearch
+tldextract
