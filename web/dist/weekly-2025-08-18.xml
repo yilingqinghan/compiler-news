@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+<title>编译器周报</title>
+<description>最近一周聚合（LLVM/GCC/Rust/Swift/Wasmtime 等）</description>
+<link></link>
+<pubDate>2025-08-18T18:58:09.146810</pubDate>
+<item>
+<title>解决 contrib/check-MAINTAINERS.py 脚本中的贡献排序问题</title>
+<description>此提交解决了 contrib/check-MAINTAINERS.py 脚本中存在的一个错误，该脚本基于姓氏、名字、bugzilla handle 和邮箱地址的顺序来排序贡献者。维护者的目标是通过记录如何排列条目，并将 Andrew Pinski 的条目重新整理到 MAINTAINERS 文件中的 DCO（开发者证书声明）部分。</description>
+<link>https://inbox.sourceware.org/gcc-patches/aKG2w6dK1wMB85oV@localhost.localdomain/</link>
+<guid>https://inbox.sourceware.org/gcc-patches/aKG2w6dK1wMB85oV@localhost.localdomain/</guid>
+</item>
+<item>
+<title>mlir[doc] 修改代码块</title>
+<description>在 https://github.com/llvm/llvm-project/commit/a66d8f62e6a6e64c77322533e4f6f2a2a5884aa2 中，对 mlir[doc] 的一段代码块进行了修正，以确保结构和含义的正确性。</description>
+<link>https://github.com/llvm/llvm-project/commit/a66d8f62e6a6e64c77322533e4f6f2a2a5884aa2</link>
+<guid>https://github.com/llvm/llvm-project/commit/a66d8f62e6a6e64c77322533e4f6f2a2a5884aa2</guid>
+</item>
+<item>
+<title>一个观察另一个视图模型状态的功能（用于MVVM实现）</title>
+<description>关于使用TCA模式进行MVVM实现的一个简单问题。用户在ViewModel中获取全局（M）状态时，遇到的问题是如何在该ViewModel中获得全局状态变化的通知，他们正在使用@SharedReader来访问它。</description>
+<link>https://forums.swift.org/t/one-feature-observing-state-of-another-for-mvvm-implementation/81680</link>
+<guid>https://forums.swift.org/t/one-feature-observing-state-of-another-for-mvvm-implementation/81680</guid>
+</item>
+<item>
+<title>clang-tidy[NFC] 移除 clang-tidy 脚本中的 py2 条件</title>
+<description>https://github.com/llvm/llvm-project/commit/66a2d1b7580aab8ac2c171647c39fd85fe711013</description>
+<link>https://github.com/llvm/llvm-project/commit/66a2d1b7580aab8ac2c171647c39fd85fe711013</link>
+<guid>https://github.com/llvm/llvm-project/commit/66a2d1b7580aab8ac2c171647c39fd85fe711013</guid>
+</item>
+<item>
+<title>修复继承成员的 'cppcoreguidelines-prefer-member-initializer' 错误提示</title>
+<description>&lt;https://github.com/llvm/llvm-project/commit/326d749a368a842e71fd0d4cd7bb97c6d9f52f3e&gt;</description>
+<link>https://github.com/llvm/llvm-project/commit/326d749a368a842e71fd0d4cd7bb97c6d9f52f3e</link>
+<guid>https://github.com/llvm/llvm-project/commit/326d749a368a842e71fd0d4cd7bb97c6d9f52f3e</guid>
+</item>
+<item>
+<title>系统头文件中的节点匹配避免</title>
+<description>在 LLVM 项目的一个 commit 中，增加了一个名为 isInSystemHeader 的函数的复杂度，并引入了模板函数来获取不同节点类型的定位信息。</description>
+<link>https://github.com/llvm/llvm-project/commit/bd77e9acf0e86a46379e1780dd58a787a7ee78f5</link>
+<guid>https://github.com/llvm/llvm-project/commit/bd77e9acf0e86a46379e1780dd58a787a7ee78f5</guid>
+</item>
+<item>
+<title>处理等于条件中的截断 u1 条件</title>
+<description>(https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f) 提供了一个修复提案，以处理在等于比较中遇到的截断 u1 条件。该修复提案还包括检查仅有一个使用条件分支。</description>
+<link>https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f</link>
+<guid>https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f</guid>
+</item>
+<item>
+<title>clang [字节码] 公式析构函数调用修正</title>
+<description>https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17 提供了一项修复，以解决 clang 中字节码中非指针类型公式析构函数调用的问题。</description>
+<link>https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17</link>
+<guid>https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17</guid>
+</item>
+<item>
+<title>mlir[doc] 修改代码块</title>
+<description>在 https://github.com/llvm/llvm-project/commit/a66d8f62e6a6e64c77322533e4f6f2a2a5884aa2 中，对 mlir[doc] 的一段代码块进行了修正，以确保结构和含义的正确性。</description>
+<link>https://github.com/llvm/llvm-project/commit/a66d8f62e6a6e64c77322533e4f6f2a2a5884aa2</link>
+<guid>https://github.com/llvm/llvm-project/commit/a66d8f62e6a6e64c77322533e4f6f2a2a5884aa2</guid>
+</item>
+<item>
+<title>clang-tidy[NFC] 移除 clang-tidy 脚本中的 py2 条件</title>
+<description>https://github.com/llvm/llvm-project/commit/66a2d1b7580aab8ac2c171647c39fd85fe711013</description>
+<link>https://github.com/llvm/llvm-project/commit/66a2d1b7580aab8ac2c171647c39fd85fe711013</link>
+<guid>https://github.com/llvm/llvm-project/commit/66a2d1b7580aab8ac2c171647c39fd85fe711013</guid>
+</item>
+<item>
+<title>修复继承成员的 'cppcoreguidelines-prefer-member-initializer' 错误提示</title>
+<description>&lt;https://github.com/llvm/llvm-project/commit/326d749a368a842e71fd0d4cd7bb97c6d9f52f3e&gt;</description>
+<link>https://github.com/llvm/llvm-project/commit/326d749a368a842e71fd0d4cd7bb97c6d9f52f3e</link>
+<guid>https://github.com/llvm/llvm-project/commit/326d749a368a842e71fd0d4cd7bb97c6d9f52f3e</guid>
+</item>
+<item>
+<title>系统头文件中的节点匹配避免</title>
+<description>在 LLVM 项目的一个 commit 中，增加了一个名为 isInSystemHeader 的函数的复杂度，并引入了模板函数来获取不同节点类型的定位信息。</description>
+<link>https://github.com/llvm/llvm-project/commit/bd77e9acf0e86a46379e1780dd58a787a7ee78f5</link>
+<guid>https://github.com/llvm/llvm-project/commit/bd77e9acf0e86a46379e1780dd58a787a7ee78f5</guid>
+</item>
+<item>
+<title>处理等于条件中的截断 u1 条件</title>
+<description>(https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f) 提供了一个修复提案，以处理在等于比较中遇到的截断 u1 条件。该修复提案还包括检查仅有一个使用条件分支。</description>
+<link>https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f</link>
+<guid>https://github.com/llvm/llvm-project/commit/5ae8a9b8cee3d4477fdec107a3ab29b633ec4f9f</guid>
+</item>
+<item>
+<title>clang [字节码] 公式析构函数调用修正</title>
+<description>https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17 提供了一项修复，以解决 clang 中字节码中非指针类型公式析构函数调用的问题。</description>
+<link>https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17</link>
+<guid>https://github.com/llvm/llvm-project/commit/e44784fb44bd00acc0ecd25537a359c3a1df8f17</guid>
+</item>
+<item>
+<title>[TableGen][DecoderEmitter] 提升冲突信息的输出</title>
+<description>此提交改进了 TableGen 的 DecoderEmitter 中冲突信息的输出方式，具体通过添加一个用于打印每个位置的位值的新功能，并引入可选的 `BitWidth` 参数来限制 `dumpBits` 函数每次调用中打印的位数。这一变更旨在提供更清晰、更详细的关于解码冲突的信息。</description>
+<link>https://github.com/llvm/llvm-project/commit/ea4325f174baca7d12e128db4f9f3b41a918da67</link>
+<guid>https://github.com/llvm/llvm-project/commit/ea4325f174baca7d12e128db4f9f3b41a918da67</guid>
+</item>
+<item>
+<title>[TableGen] Make a function static (NFC)</title>
+<description>@@ -348,6 +348,24 @@ static const BitsInit &amp;getBitsField(const Record &amp;Def, StringRef FieldName) { | 348 | 348 | // Representation of the instruction to work on. | 349 | 349 | typedef std::vector insn_t; | 350 | 350 | | </description>
+<link>https://github.com/llvm/llvm-project/commit/05f1673e7569da0762d2a5d890ca4860760dad34</link>
+<guid>https://github.com/llvm/llvm-project/commit/05f1673e7569da0762d2a5d890ca4860760dad34</guid>
+</item>
+<item>
+<title>TableGen[DecoderEmitter] 输出早期冲突</title>
+<description>在编码过程中，发现出现了冲突。为了便于调试和问题定位，增加了一些调试信息输出，以便更早地显示这些冲突。</description>
+<link>https://github.com/llvm/llvm-project/commit/05827e7ccb4e1295648e38b11ebdbb8fd817177b</link>
+<guid>https://github.com/llvm/llvm-project/commit/05827e7ccb4e1295648e38b11ebdbb8fd817177b</guid>
+</item>
+<item>
+<title>clang: 修改OMPClauseProfiler方法名中的拼写错误</title>
+<description>在llvm项目的LLVM/llvm-project仓库中，commit 3d83dbb73610c6cfb1b67252bd2d519a0aa5e308进行了修改。主要修复了OMPClauseProfiler方法名中的拼写错误。</description>
+<link>https://github.com/llvm/llvm-project/commit/3d83dbb73610c6cfb1b67252bd2d519a0aa5e308</link>
+<guid>https://github.com/llvm/llvm-project/commit/3d83dbb73610c6cfb1b67252bd2d519a0aa5e308</guid>
+</item>
+<item>
+<title>[TableGen][DecoderEmitter] 缩短 Filters 向量的生命周期至 NFC (NFC)</title>
+<description>在 LLVM 项目中，对 TableGen 和 DecoderEmitter 的代码进行修改。通过将 Filters 向量的生命周期延长到 NFC（No Future Changes）级别的改动来优化编码。</description>
+<link>https://github.com/llvm/llvm-project/commit/fc6024d8959cdb82e5421787882288e26ee728bc</link>
+<guid>https://github.com/llvm/llvm-project/commit/fc6024d8959cdb82e5421787882288e26ee728bc</guid>
+</item>
+<item>
+<title>clang-format更新OneLineFormatOffRegex选项，修正getcpu标准及增强CI日志统计功能</title>
+<description>在llvm项目中，进行了多处功能的更新和修复。主要包括以下几方面：1. 在clang-format中添加了OneLineFormatOffRegex选项来简化格式化的管理；2. 修正了libstdc++中的getcpu标准函数；3. CI系统新增了一个显示统计信息的功能；4. ADT模块在SmallPtrSetImpl::remove_if方法中使用small_buckets()。这些更改的目的是为了提高代码质量和维护性。</description>
+<link>https://github.com/llvm/llvm-project/commit/ee51f35993d9623563551f9bb9521824992967b6</link>
+<guid>https://github.com/llvm/llvm-project/commit/ee51f35993d9623563551f9bb9521824992967b6</guid>
+</item>
+<item>
+<title>libc++ flat_set 缺少特性宏</title>
+<description>https://github.com/llvm/llvm-project/commit/f3008c11406440959f6fc2120dd2117df6fa11ce</description>
+<link>https://github.com/llvm/llvm-project/commit/f3008c11406440959f6fc2120dd2117df6fa11ce</link>
+<guid>https://github.com/llvm/llvm-project/commit/f3008c11406440959f6fc2120dd2117df6fa11ce</guid>
+</item>
+<item>
+<title>RISC-V: 添加 missed DONE 以解决 vx 结合模式 [NFC]</title>
+<description>您通过另一个标签页或窗口登录。刷新会话。</description>
+<link>https://github.com/gcc-mirror/gcc/commit/756f771f58f79406a08b6d574939b70d895bb613</link>
+<guid>https://github.com/gcc-mirror/gcc/commit/756f771f58f79406a08b6d574939b70d895bb613</guid>
+</item>
+<item>
+<title>M68k 添加 PCD 地址模式的 anyext 行为</title>
+<description>https://github.com/llvm/llvm-project/commit/bc3754de0aed44147e64b99414ecb06f84ab1a91</description>
+<link>https://github.com/llvm/llvm-project/commit/bc3754de0aed44147e64b99414ecb06f84ab1a91</link>
+<guid>https://github.com/llvm/llvm-project/commit/bc3754de0aed44147e64b99414ecb06f84ab1a91</guid>
+</item>
+<item>
+<title>移除对llvm-project-tests.yml的调用到spirv-tests.yml</title>
+<description>https://github.com/llvm/llvm-project/commit/1f5047e43092f39a60a0ddba921610c2ab00897e</description>
+<link>https://github.com/llvm/llvm-project/commit/1f5047e43092f39a60a0ddba921610c2ab00897e</link>
+<guid>https://github.com/llvm/llvm-project/commit/1f5047e43092f39a60a0ddba921610c2ab00897e</guid>
+</item>
+<item>
+<title>移除declareCommon函数中的未使用参数IsTarget</title>
+<description>在https://github.com/llvm/llvm-project/commit/2cedb286b8a37a3c6f09ac394b5e95413baac287中，移除了declareCommon函数中的未使用参数IsTarget。</description>
+<link>https://github.com/llvm/llvm-project/commit/2cedb286b8a37a3c6f09ac394b5e95413baac287</link>
+<guid>https://github.com/llvm/llvm-project/commit/2cedb286b8a37a3c6f09ac394b5e95413baac287</guid>
+</item>
+<item>
+<title>MCSymbol: 移除AMDGPU特有的Kind::TargetCommon并重命名SymContents为kind</title>
+<description>这些LLVM项目的提交涉及对MCSymbol类的更改，特别是关于移除一个特定于AMDGPU特性的成员和将一个符号内容枚举器重命名为kind的变化。</description>
+<link>https://github.com/llvm/llvm-project/commit/aa96e20dcefa7d73229c98a7d2727696ff949459</link>
+<guid>https://github.com/llvm/llvm-project/commit/aa96e20dcefa7d73229c98a7d2727696ff949459</guid>
+</item>
+<item>
+<title>TableGen[解码发射器] 添加工作于范围的帮助者（NFC）</title>
+<description>https://github.com/llvm/llvm-project/commit/7bb73455f76c8ce3b470fb931daa68a33ec79c34</description>
+<link>https://github.com/llvm/llvm-project/commit/7bb73455f76c8ce3b470fb931daa68a33ec79c34</link>
+<guid>https://github.com/llvm/llvm-project/commit/7bb73455f76c8ce3b470fb931daa68a33ec79c34</guid>
+</item>
+<item>
+<title>为 #153946 添加测试</title>
+<description>在 https://github.com/llvm/llvm-project/commit/73775a0f2749d0cc8b8877bf34ebb3534a2e7913 中，引入了针对特定问题 #153946 的测试用例，并使用了不同的循环向量化宽度和交错选项。</description>
+<link>https://github.com/llvm/llvm-project/commit/73775a0f2749d0cc8b8877bf34ebb3534a2e7913</link>
+<guid>https://github.com/llvm/llvm-project/commit/73775a0f2749d0cc8b8877bf34ebb3534a2e7913</guid>
+</item>
+<item>
+<title>感兴趣讨论MLIR中更丰富TableGen描述的特性</title>
+<description>在LLVM US开发会议上将举行一个演讲，探讨在MLIR中使用更丰富的TableGen描述操作、类型和特性的优势。发言者希望获取如何更好地利用TableGen的方法。</description>
+<link>https://discourse.llvm.org/t/survey-interested-in-discussing-richer-tablegen-descriptions-in-mlir/87959</link>
+<guid>https://discourse.llvm.org/t/survey-interested-in-discussing-richer-tablegen-descriptions-in-mlir/87959</guid>
+</item>
+<item>
+<title>clang[test] 调试信息测试的位置</title>
+<description>目前，Clang的调试信息测试分布在多个目录中，并且最近引入了支持KeyInstructions的工作。这次讨论建议将调试信息测试集中管理，并将其放在 clang/test/DebugInfo 目录下，或者根据语言特性分别在 CXX 和 ObjC 子目录下。</description>
+<link>https://discourse.llvm.org/t/clang-test-location-of-clang-debug-info-tests/87958</link>
+<guid>https://discourse.llvm.org/t/clang-test-location-of-clang-debug-info-tests/87958</guid>
+</item>
+<item>
+<title>MLIR GPU CUDA sm90 gemm_pred_f32_f16_f16_128x128x128.mlir集成测试失败及 matmul.py 调试信息</title>
+<description>作者尝试使用CMake命令在MLIR项目中启动nvgpu dialect的集成测试时遇到了问题。他们发现llvm-lit命令无法运行，报告了对MLIR :: Integration/GPU/CUDA/sm90/gemm_pred_f32_f16_f16_128x128x128.mlir的支持性测试不支持。同时，运行Python脚本'matmul.py'时出现了一条调试信息错误。</description>
+<link>https://discourse.llvm.org/t/how-to-start-the-integrated-test-of-nvgpu-dialect/87950</link>
+<guid>https://discourse.llvm.org/t/how-to-start-the-integrated-test-of-nvgpu-dialect/87950</guid>
+</item>
+<item>
+<title>Clang-tidy misc-use-anonymous-namespace</title>
+<description>https://discourse.llvm.org/t/clang-tidy-misc-use-anonymous-namespace/87947</description>
+<link>https://discourse.llvm.org/t/clang-tidy-misc-use-anonymous-namespace/87947</link>
+<guid>https://discourse.llvm.org/t/clang-tidy-misc-use-anonymous-namespace/87947</guid>
+</item>
+<item>
+<title>LLVM 21.1.0-rc3 发布</title>
+<description>https://github.com/llvm/llvm-project/releases/tag/llvmorg-21.1.0-rc3</description>
+<link>https://github.com/llvm/llvm-project/releases/tag/llvmorg-21.1.0-rc3</link>
+<guid>https://github.com/llvm/llvm-project/releases/tag/llvmorg-21.1.0-rc3</guid>
+</item>
+<item>
+<title>如何调试PDL模式匹配</title>
+<description>https://discourse.llvm.org/t/how-to-debug-pdl-pattern-matching/87940</description>
+<link>https://discourse.llvm.org/t/how-to-debug-pdl-pattern-matching/87940</link>
+<guid>https://discourse.llvm.org/t/how-to-debug-pdl-pattern-matching/87940</guid>
+</item>
+<item>
+<title>MILR中全量转换与部分转换最佳设计模式</title>
+<description>讨论如何通过全量或部分转换将StableHLO转换为自定义方言的问题，需要根据模式的不同方式处理非法操作。</description>
+<link>https://discourse.llvm.org/t/best-design-pattern-for-toggle-full-vs-partial-dialect-conversion-in-milr/87926</link>
+<guid>https://discourse.llvm.org/t/best-design-pattern-for-toggle-full-vs-partial-dialect-conversion-in-milr/87926</guid>
+</item>
+<item>
+<title>Clang vs GCC ffp-contract 默认值对基准测试的影响</title>
+<description>https://discourse.llvm.org/t/impact-of-ffp-contract-defaults-on-benchmarking/87906</description>
+<link>https://discourse.llvm.org/t/impact-of-ffp-contract-defaults-on-benchmarking/87906</link>
+<guid>https://discourse.llvm.org/t/impact-of-ffp-contract-defaults-on-benchmarking/87906</guid>
+</item>
+<item>
+<title>传递 -fsanitize-trap=&lt;...&gt; 而未关联 -fsanitize=&lt;...&gt; 时发出警告</title>
+<description>讨论围绕 Undefined Behavior Sanitizer (UBSan) 标志 -fsanitize-trap= 展开，该标志启用 Undefined Behavior Sanitizer 的未定义行为捕捉。当前仅当 -fsanitize-trap= 出现在其自身位置时才忽略该标志的行为提议被改变，因为这种行为不足以提供足够的警告。</description>
+<link>https://discourse.llvm.org/t/rfc-emit-a-warning-when-fsanitize-trap-is-passed-without-associated-fsanitize/87893</link>
+<guid>https://discourse.llvm.org/t/rfc-emit-a-warning-when-fsanitize-trap-is-passed-without-associated-fsanitize/87893</guid>
+</item>
+<item>
+<title>RISC-V LLVM 同步会议更新</title>
+<description>过去一年中，RISC-V LLVM 进行了一系列同步会议的召开，包括2025年8月14日、4月24日、6月19日、5月22日以及7月17日。这些会议通常在 RISC-V LLVM 讨论论坛上分享议程和会议接入信息。</description>
+<link>https://discourse.llvm.org/t/risc-v-llvm-sync-up-call-august-14th-2025/87891</link>
+<guid>https://discourse.llvm.org/t/risc-v-llvm-sync-up-call-august-14th-2025/87891</guid>
+</item>
+<item>
+<title>RFC: 支持cheriot目标三元组作为riscv32子架构</title>
+<description>在一项关于上游化CHERI的更广泛RFC讨论之后，有关于在LLVM的目标三元组中添加支持CHERIoT架构的相关讨论。CHERIoT是一个基于RISCV32E微控制器的全系统架构，需要更为详细的讨论，因为它的独特特性和与RISCV32E + CHERI基线的不同之处。</description>
+<link>https://discourse.llvm.org/t/rfc-support-cheriot-target-triple-as-subarchitecture-of-riscv32/87883</link>
+<guid>https://discourse.llvm.org/t/rfc-support-cheriot-target-triple-as-subarchitecture-of-riscv32/87883</guid>
+</item>
+<item>
+<title>RFC: 延伸 LLVM 编译器基础设施中的内存效应以改进循环不变量代码移动并通过引入新 MemInit 效应提高性能</title>
+<description>讨论如何在 LLVM 的编译器基础设施中扩展内存效应，以提高循环不变量代码移动（LICM）的效果。该提议旨在细化 `MemWrite` 效应的处理方式，特别是当没有输入和读取效果时。</description>
+<link>https://discourse.llvm.org/t/rfc-extending-memory-effects-and-improving-loop-invariant-code-motion-via-a-new-meminit-effect/87873</link>
+<guid>https://discourse.llvm.org/t/rfc-extending-memory-effects-and-improving-loop-invariant-code-motion-via-a-new-meminit-effect/87873</guid>
+</item>
+<item>
+<title>PSA：在Python中启用自动位置推断</title>
+<description>PSA 提到了在 LLVM/MLIR 项目中引入了对 Python 的 IR（中间表示）进行自动位置推断的能力，允许使用 Python 绑定生成的 IR 中的位置推断。此功能默认启用，但如果不必要可以禁用以减少额外开销。可以通过提供的 API 启动此功能，并为调用栈中的每个函数调用提供详细的 CallSiteLoc 信息。</description>
+<link>https://discourse.llvm.org/t/psa-automatic-location-inference-in-python/87871</link>
+<guid>https://discourse.llvm.org/t/psa-automatic-location-inference-in-python/87871</guid>
+</item>
+<item>
+<title>线程安全分析与std::weak_ptr</title>
+<description>我正在为一个使用std::weak_ptr及其类似类型（如std::shared_ptr）的项目添加线程安全性注释。由于std::weak_ptr缺乏operator*和operator-&gt;，因此不支持PT_GUARDED_BY特性。我寻求关于如何针对通过std::weak_ptr::lock()访问底层类型的需要保护的类型进行标注的意见。</description>
+<link>https://discourse.llvm.org/t/thread-safety-analysis-and-std-weak-ptr/87864</link>
+<guid>https://discourse.llvm.org/t/thread-safety-analysis-and-std-weak-ptr/87864</guid>
+</item>
+<item>
+<title>即将到来的工作会议安排</title>
+<description>我正在准备接下来两周的WG14（C）标准工作会议，这期间无法进行代码审查。此外，由于从2023年10月6日起将进入为期一段时间的学术休假期，期间不会收到任何邮件。</description>
+<link>https://discourse.llvm.org/t/my-upcoming-availability/87851</link>
+<guid>https://discourse.llvm.org/t/my-upcoming-availability/87851</guid>
+</item>
+<item>
+<title>LLVM 21.1.0-rc3 发布</title>
+<description>我们很高兴宣布，LLVM 21.1.0-rc3 现已发布，包括主 LLVM 项目及其子项目，如 clang、lld、libc++ 和 MLIR。</description>
+<link>https://discourse.llvm.org/t/llvm-21-1-0-rc3-released/87826</link>
+<guid>https://discourse.llvm.org/t/llvm-21-1-0-rc3-released/87826</guid>
+</item>
+<item>
+<title>Error: 拾ialect 'xxx' 提供了无类型的解析钩子</title>
+<description>https://discourse.llvm.org/t/error-dialect-xxx-provides-no-type-parsing-hook/87825</description>
+<link>https://discourse.llvm.org/t/error-dialect-xxx-provides-no-type-parsing-hook/87825</link>
+<guid>https://discourse.llvm.org/t/error-dialect-xxx-provides-no-type-parsing-hook/87825</guid>
+</item>
+<item>
+<title>使用GOTPCREL重新定位项处理personality和typeinfo eh_frame引用</title>
+<description>讨论如何在Clang中使用GETPCREL重新定位项来处理personality和typeinfo的eh_frame引用。本次讨论涉及到间接编码指针可能存在的问题，尤其是它们被编译单元间重复利用，并且可以修改。</description>
+<link>https://discourse.llvm.org/t/using-gotpcrel-relocations-for-personality-and-typeinfo-eh-frame-references/87820</link>
+<guid>https://discourse.llvm.org/t/using-gotpcrel-relocations-for-personality-and-typeinfo-eh-frame-references/87820</guid>
+</item>
+<item>
+<title>LLVM 周报 #606（2025年8月11日）</title>
+<description>https://llvmweekly.org/issue/606</description>
+<link>https://llvmweekly.org/issue/606</link>
+<guid>https://llvmweekly.org/issue/606</guid>
+</item>
+<item>
+<title>解决 contrib/check-MAINTAINERS.py 脚本中的贡献排序问题</title>
+<description>此提交解决了 contrib/check-MAINTAINERS.py 脚本中存在的一个错误，该脚本基于姓氏、名字、bugzilla handle 和邮箱地址的顺序来排序贡献者。维护者的目标是通过记录如何排列条目，并将 Andrew Pinski 的条目重新整理到 MAINTAINERS 文件中的 DCO（开发者证书声明）部分。</description>
+<link>https://inbox.sourceware.org/gcc-patches/aKG2w6dK1wMB85oV@localhost.localdomain/</link>
+<guid>https://inbox.sourceware.org/gcc-patches/aKG2w6dK1wMB85oV@localhost.localdomain/</guid>
+</item>
+</channel></rss>

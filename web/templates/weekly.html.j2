@@ -8,15 +8,28 @@
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css">
   <style>
     .sticky-col{ position: sticky; top: 1rem; height: calc(100vh - 2rem); }
     .card-tight .card-body{ gap:.5rem; }
     .chart-wrap{ height: 22rem; }
+    body[data-density="compact"] .card-body{ padding-top:.5rem; padding-bottom:.5rem; gap:.25rem; }
+    .toolbar{ position: fixed; right: 1rem; bottom: 1rem; z-index:50; display:flex; flex-direction:column; gap:.5rem;}
+    /* 标题两行显示，悬浮展开 */
+    .clamp-2{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .group:hover .clamp-2{ -webkit-line-clamp:unset; }
+    /* Meta 行强制单行 */
+    .meta-row{ white-space:nowrap; overflow:hidden; }
+    .meta-row > *{ flex-shrink:0; }
+    /* tag 截断省略，防溢出 */
+    .tag-badge{ max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   </style>
 </head>
 <body class="bg-base-100"
       data-window-start="{{ start }}T00:00:00"
-      data-window-end="{{ end }}T23:59:59">
+      data-window-end="{{ end }}T23:59:59"
+      data-density="cozy">
   <div class="mx-auto w-full max-w-[1600px] p-4 md:p-6 grid md:grid-cols-12 gap-6">
     <!-- 左侧：导航/过滤 -->
     <aside class="md:col-span-2 xl:col-span-2">
@@ -66,6 +79,12 @@
     <main class="md:col-span-10 xl:col-span-10">
       <div class="flex items-center justify-between">
         <h1 class="text-3xl font-bold">编译器周报 <span class="text-base-content/60">{{ start }} ~ {{ end }}</span></h1>
+        <div class="flex items-center gap-2">
+          <button id="btn-theme" class="btn btn-sm">🌓 主题</button>
+          <button id="btn-density" class="btn btn-sm">密度</button>
+          <button id="btn-export" class="btn btn-sm">📝 导出MD</button>
+          <button id="btn-print" class="btn btn-sm">🖨 打印</button>
+        </div>
       </div>
       <p class="text-base-content/70 mt-1">自动聚合：LLVM、GCC、Rust、Swift、V8、GraalVM、Wasmtime、Zig；仅统计最近一周。</p>
 
@@ -82,21 +101,32 @@
       <section id="Top" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mt-6">
         {% for it in top %}
         {% set s = it.summary %}
-        <div class="group card card-tight bg-base-200 shadow card-compact item transition-all duration-200
+        <div id="c-{{ it.cluster_id }}"
+             class="group card card-tight bg-base-200 shadow card-compact item transition-all duration-200
                     hover:shadow-xl hover:-translate-y-0.5 hover:border-base-300"
              data-proj="{{ (it.projects or []) | join(',') }}"
              data-tags="{{ (s.tags or []) | join(',') }}">
           <div class="card-body">
-            <!-- 标题行：单行省略 -->
-            <h3 class="text-lg font-semibold truncate item-title"
-                title="{{ s.title_zh or s.title }}"
-                data-en="{{ s.title or it.title }}"
-                data-zh="{{ s.title_zh or s.title }}">
-              {{ s.title_zh or s.title }}
-            </h3>
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="text-lg font-semibold clamp-2 item-title"
+                  title="{{ s.title_zh or s.title }}"
+                  data-en="{{ s.title or it.title }}"
+                  data-zh="{{ s.title_zh or s.title }}">
+                {{ s.title_zh or s.title }}
+              </h3>
+              <div class="flex items-center gap-1">
+                <button class="btn btn-ghost btn-xs" onclick="copyLink('c-{{ it.cluster_id }}')" title="复制链接">🔗</button>
+                <button class="btn btn-ghost btn-xs star" data-id="{{ it.cluster_id }}" title="收藏">☆</button>
+              </div>
+            </div>
 
-            <!-- meta 行：优先级 + 时间 + 星期 -->
-            <div class="flex items-center gap-3 text-xs text-base-content/70">
+            <p class="text-sm text-base-content/70 one-liner"
+               data-en="{{ s.one_liner or '' }}"
+               data-zh="{{ s.one_liner_zh or s.one_liner or '' }}">
+              {{ s.one_liner_zh or s.one_liner or '' }}
+            </p>
+
+            <div class="meta-row flex items-center gap-3 text-xs text-base-content/70 mt-0.5">
               {% set p = s.priority or it.priority %}
               <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full
                            {{ 'bg-red-100 text-red-700' if p=='high' else
@@ -104,13 +134,13 @@
                               'bg-emerald-100 text-emerald-700' }}">
                 {{ '🔥' if p=='high' else '⚠️' if p=='medium' else '✅' }} {{ p }}
               </span>
+              <button class="btn btn-ghost btn-xs info-btn" title="重要性理由"
+                      data-reason="{{ s.importance_reason_zh or s.importance_reason or '' }}">ℹ️</button>
               <span class="inline-flex items-center gap-1">
                 🗓️ <time class="meta-time" data-ts="{{ it.latest_ts }}">{{ it.latest_ts }}</time>
                 <span class="weekday opacity-70"></span>
               </span>
             </div>
-
-            <!-- 周内进度条 -->
             <progress class="progress progress-primary h-1 w-full mt-1 progress-week"
                       value="0" max="100" data-ts="{{ it.latest_ts }}"></progress>
 
@@ -121,43 +151,61 @@
                 <div class="digest-md text-sm mb-2" data-md="{{ (s.digest_zh or []) | join('\n') }}"></div>
                 <p class="item-context text-base-content/70" data-en="{{ s.context }}" data-zh="{{ s.context_zh or s.context }}">{{ s.context_zh or s.context }}</p>
                 {% if s.key_points or s.key_points_zh %}
-                  <ul class="list-disc list-inside text-sm item-kp"
-                      data-en="{{ (s.key_points or [])|join('||') }}"
-                      data-zh="{{ (s.key_points_zh or s.key_points or [])|join('||') }}">
-                    {% for k in (s.key_points_zh or s.key_points or []) %}<li>{{ k }}</li>{% endfor %}
-                  </ul>
+                <ul class="list-disc list-inside text-sm item-kp"
+                    data-en="{{ (s.key_points or [])|join('||') }}"
+                    data-zh="{{ (s.key_points_zh or s.key_points or [])|join('||') }}">
+                  {% for k in (s.key_points_zh or s.key_points or []) %}<li>{{ k }}</li>{% endfor %}
+                </ul>
                 {% endif %}
                 {% set link0 = (s.links[0] if s.links and (s.links[0]|string).startswith('http') and (s.links[0]|string) != '#error' else None) %}
                 {% if link0 %}
                 <a class="btn btn-sm mt-2" target="_blank" href="{{ link0 }}" data-i18n="view">查看原文</a>
                 {% endif %}
+                <div class="text-xs opacity-70 mt-2 related"></div>
               </div>
             </div>
-            {% if s.tags %}<div class="mt-2 flex flex-wrap gap-1">{% for t in s.tags %}<div class="badge badge-outline">{{ t }}</div>{% endfor %}</div>{% endif %}
+
+            {% if s.tags %}
+            <div class="mt-2 flex flex-wrap gap-1">
+              {% for t in s.tags %}<div class="badge badge-outline tag-badge tag-chip" title="{{ t }}" data-tag="{{ t }}">{{ t }}</div>{% endfor %}
+            </div>{% endif %}
           </div>
         </div>
         {% endfor %}
       </section>
 
-      <!-- 各分组 -->
       {% for g, items in groups.items() %}
       <section id="{{ g | replace(' ','-') }}" class="mt-10">
         <h2 class="text-2xl font-bold mb-3">{{ g }}</h2>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {% for it in items %}
           {% set s = it.summary %}
-          <div class="group card card-tight bg-base-100 border border-base-200 item transition-all duration-200
+          <div id="c-{{ it.cluster_id }}"
+               class="group card card-tight bg-base-100 border border-base-200 item transition-all duration-200
                       hover:shadow-xl hover:-translate-y-0.5 hover:border-base-300"
                data-proj="{{ (it.projects or []) | join(',') }}"
                data-tags="{{ (s.tags or []) | join(',') }}">
             <div class="card-body">
-              <h3 class="text-lg font-semibold truncate item-title"
-                  title="{{ s.title_zh or s.title }}"
-                  data-en="{{ s.title or it.title }}"
-                  data-zh="{{ s.title_zh or s.title }}">
-                {{ s.title_zh or s.title }}
-              </h3>
-              <div class="flex items-center gap-3 text-xs text-base-content/70">
+              <div class="flex items-center justify-between gap-2">
+                <h3 class="text-lg font-semibold clamp-2 item-title"
+                    title="{{ s.title_zh or s.title }}"
+                    data-en="{{ s.title or it.title }}"
+                    data-zh="{{ s.title_zh or s.title }}">
+                  {{ s.title_zh or s.title }}
+                </h3>
+                <div class="flex items-center gap-1">
+                  <button class="btn btn-ghost btn-xs" onclick="copyLink('c-{{ it.cluster_id }}')" title="复制链接">🔗</button>
+                  <button class="btn btn-ghost btn-xs star" data-id="{{ it.cluster_id }}" title="收藏">☆</button>
+                </div>
+              </div>
+
+              <p class="text-sm text-base-content/70 one-liner"
+                 data-en="{{ s.one_liner or '' }}"
+                 data-zh="{{ s.one_liner_zh or s.one_liner or '' }}">
+                {{ s.one_liner_zh or s.one_liner or '' }}
+              </p>
+
+              <div class="meta-row flex items-center gap-3 text-xs text-base-content/70 mt-0.5">
                 {% set p = s.priority or it.priority %}
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full
                              {{ 'bg-red-100 text-red-700' if p=='high' else
@@ -165,6 +213,8 @@
                                 'bg-emerald-100 text-emerald-700' }}">
                   {{ '🔥' if p=='high' else '⚠️' if p=='medium' else '✅' }} {{ p }}
                 </span>
+                <button class="btn btn-ghost btn-xs info-btn" title="重要性理由"
+                        data-reason="{{ s.importance_reason_zh or s.importance_reason or '' }}">ℹ️</button>
                 <span class="inline-flex items-center gap-1">
                   🗓️ <time class="meta-time" data-ts="{{ it.latest_ts }}">{{ it.latest_ts }}</time>
                   <span class="weekday opacity-70"></span>
@@ -190,9 +240,14 @@
                   {% if link0 %}
                   <a class="btn btn-sm mt-2" target="_blank" href="{{ link0 }}" data-i18n="view">查看原文</a>
                   {% endif %}
+                  <div class="text-xs opacity-70 mt-2 related"></div>
                 </div>
               </div>
-              {% if s.tags %}<div class="mt-2 flex flex-wrap gap-1">{% for t in s.tags %}<div class="badge badge-outline">{{ t }}</div>{% endfor %}</div>{% endif %}
+
+              {% if s.tags %}
+              <div class="mt-2 flex flex-wrap gap-1">
+                {% for t in s.tags %}<div class="badge badge-outline tag-badge tag-chip" title="{{ t }}" data-tag="{{ t }}">{{ t }}</div>{% endfor %}
+              </div>{% endif %}
             </div>
           </div>
           {% endfor %}
@@ -207,89 +262,210 @@
           <div class="chart-wrap card bg-base-200 p-3 overflow-hidden"><canvas id="barSources"></canvas></div>
           <div class="chart-wrap card bg-base-200 p-3 overflow-hidden"><canvas id="pieProjects"></canvas></div>
         </div>
+
+        <!-- 数据来源表格 -->
+        <div class="card bg-base-100 border border-base-200 mt-4">
+          <div class="card-body">
+            <div class="overflow-x-auto">
+              <table class="table table-sm">
+                <thead><tr><th>来源</th><th class="text-right">条目数</th></tr></thead>
+                <tbody>
+                  {% for name, cnt in sources %}
+                  <tr><td>{{ name }}</td><td class="text-right">{{ cnt }}</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   </div>
 
+  <!-- 漂浮工具条 -->
+  <div class="toolbar">
+    <button class="btn btn-circle" id="btn-week" title="本周进度">📅</button>
+    <button class="btn btn-circle" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="回到顶部">⬆️</button>
+  </div>
+
+  <!-- 理由弹窗 -->
+  <dialog id="dlg-reason" class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">重要性理由</h3>
+      <p id="reason-text" class="py-2 whitespace-pre-wrap"></p>
+      <div class="modal-action">
+        <form method="dialog"><button class="btn">OK</button></form>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 周览弹窗 -->
+  <dialog id="dlg-week" class="modal">
+    <div class="modal-box w-11/12 max-w-3xl">
+      <h3 class="font-bold text-lg">本周分布（{{ start }} ~ {{ end }}）</h3>
+      <div id="week-bars" class="grid grid-cols-1 gap-2 my-4"></div>
+      <div id="week-list" class="text-sm"></div>
+      <div class="modal-action">
+        <form method="dialog"><button class="btn">关闭</button></form>
+      </div>
+    </div>
+  </dialog>
+
 <script>
-let lang = 'zh';
+/* ---------- 语言/主题/密度 ---------- */
+let lang = localStorage.getItem('lang') || 'zh';
+function applyTheme(theme){ document.documentElement.setAttribute('data-theme', theme); localStorage.setItem('theme', theme); }
+applyTheme(localStorage.getItem('theme') || 'light');
+document.body.dataset.density = localStorage.getItem('density') || 'cozy';
+document.getElementById('btn-theme').onclick=()=>{ const next=(document.documentElement.getAttribute('data-theme')==='light')?'dark':'light'; applyTheme(next); };
+document.getElementById('btn-density').onclick=()=>{ const next=(document.body.dataset.density==='compact')?'cozy':'compact'; document.body.dataset.density=next; localStorage.setItem('density', next); };
+document.getElementById('btn-zh').onclick=()=>{lang='zh';localStorage.setItem('lang','zh');setLang('zh');};
+document.getElementById('btn-en').onclick=()=>{lang='en';localStorage.setItem('lang','en');setLang('en');};
 const i18n = { zh:{view:"查看原文"}, en:{view:"View Source"} };
 function setLang(l){
-  lang=l;
   document.getElementById('btn-zh').classList.toggle('btn-ghost', l!=='zh');
   document.getElementById('btn-en').classList.toggle('btn-ghost', l!=='en');
-  document.querySelectorAll('.item-title').forEach(el=>{
-    el.textContent = el.dataset[l] || el.dataset['en'] || el.textContent;
-  });
-  document.querySelectorAll('.item-context').forEach(el=>{
-    el.textContent = el.dataset[l] || el.dataset['en'] || el.textContent;
-  });
+  document.querySelectorAll('.item-title').forEach(el=>{ el.textContent = el.dataset[l] || el.dataset['en'] || el.textContent; });
+  document.querySelectorAll('.one-liner').forEach(el=>{ el.textContent = el.dataset[l] || el.dataset['en'] || el.textContent; });
+  document.querySelectorAll('.item-context').forEach(el=>{ el.textContent = el.dataset[l] || el.dataset['en'] || el.textContent; });
   document.querySelectorAll('.item-kp').forEach(el=>{
     const arr = (el.dataset[l] || el.dataset['en'] || '').split('||').filter(Boolean);
     el.innerHTML = arr.map(x=>`<li>${x}</li>`).join('');
   });
-  document.querySelectorAll('[data-i18n="view"]').forEach(el=>{
-    el.textContent = (i18n[l]||i18n.zh).view;
-  });
+  document.querySelectorAll('[data-i18n="view"]').forEach(el=>{ el.textContent = (i18n[l]||i18n.zh).view; });
 }
-document.getElementById('btn-zh').onclick=()=>setLang('zh');
-document.getElementById('btn-en').onclick=()=>setLang('en');
-setLang('zh');
+setLang(lang);
 
-// 渲染“本周综述”的 Markdown
-const ov = document.getElementById('overview');
-if (ov) {
-  const md = ov.dataset.md || '';
-  ov.innerHTML = marked.parse(md);
-}
-
-// 渲染每张卡片的 digest（数组 -> Markdown 列表）
-document.querySelectorAll('.digest-md').forEach(el=>{
-  const md = (el.dataset.md || '').trim();
-  if (!md) return;
-  const list = md.split('\n').map(x => x.trim()).filter(Boolean)
-                 .map(x => x.startsWith('- ') ? x : ('- ' + x)).join('\n');
+/* ---------- 概述 & digest Markdown ---------- */
+const ov=document.getElementById('overview'); if (ov) { const md=ov.dataset.md || ''; ov.innerHTML = marked.parse(md); }
+function renderDigest(el){
+  const md = (el.dataset.md || '').trim(); if (!md) return;
+  const list = md.split('\n').map(x=>x.trim()).filter(Boolean).map(x => x.startsWith('- ') ? x : ('- ' + x)).join('\n');
   el.innerHTML = marked.parse(list);
-});
+  el.querySelectorAll('pre code').forEach(block=>{ try{ hljs.highlightElement(block); }catch(e){} });
+}
+document.querySelectorAll('.digest-md').forEach(renderDigest);
 
-// 过滤（按项目/架构标签）
+/* ---------- 过滤 + 标签点击 ---------- */
 function applyFilter(){
   const proj = (document.getElementById('flt-proj')?.value || '').trim();
   const arch = (document.getElementById('flt-arch')?.value || '').trim();
+  localStorage.setItem('pref:flt-proj', proj); localStorage.setItem('pref:flt-arch', arch);
   document.querySelectorAll('.item').forEach(el=>{
-    const ps = (el.dataset.proj||''); const ts = (el.dataset.tags||'');
-    const okProj = !proj || ps.split(',').includes(proj);
-    const okArch = !arch || ts.split(',').includes(arch);
-    el.style.display = (okProj && okArch) ? '' : 'none';
+    const ps=(el.dataset.proj||''); const ts=(el.dataset.tags||'');
+    const okProj=!proj || ps.split(',').includes(proj);
+    const okArch=!arch || ts.split(',').includes(arch);
+    el.style.display=(okProj && okArch)?'':'none';
   });
 }
 function resetFilter(){ const p=document.getElementById('flt-proj'); const a=document.getElementById('flt-arch'); if(p)p.value=''; if(a)a.value=''; applyFilter(); }
+['flt-proj','flt-arch'].forEach(id=>{ const el=document.getElementById(id); const key='pref:'+id; if(el && localStorage.getItem(key)) el.value=localStorage.getItem(key); el?.addEventListener('change', applyFilter); });
+document.querySelectorAll('.tag-chip').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    const v=b.dataset.tag || b.textContent.trim();
+    const sel=document.getElementById('flt-proj'); if (sel){ sel.value=v; localStorage.setItem('pref:flt-proj',v); }
+    applyFilter();
+  });
+});
+
+/* ---------- 展开/收起 ---------- */
 function toggleAll(expand){ document.querySelectorAll('.collapse > input[type=checkbox]').forEach(cb=>cb.checked = !!expand); }
 
-// 时间/星期/进度条
-const WEEKDAY = ['周日','周一','周二','周三','周四','周五','周六'];
-const winStart = new Date(document.body.dataset.windowStart);
-const winEnd   = new Date(document.body.dataset.windowEnd);
-const spanMs = Math.max(1, (winEnd - winStart));
-
+/* ---------- 时间/星期/进度条 ---------- */
+const WEEKDAY=['周日','周一','周二','周三','周四','周五','周六'];
+const winStart=new Date(document.body.dataset.windowStart); const winEnd=new Date(document.body.dataset.windowEnd);
+const spanMs=Math.max(1,(winEnd-winStart));
 document.querySelectorAll('.meta-time').forEach(el=>{
-  const ts = new Date(el.dataset.ts || el.textContent);
-  if (!isNaN(ts)) {
-    const wd = WEEKDAY[ts.getDay()];
-    el.parentElement.querySelector('.weekday').textContent = wd;
-  }
+  const ts=new Date(el.dataset.ts || el.textContent); if(!isNaN(ts)){ el.parentElement.querySelector('.weekday').textContent = WEEKDAY[ts.getDay()]; }
 });
 document.querySelectorAll('.progress-week').forEach(el=>{
-  const ts = new Date(el.dataset.ts || '');
-  if (!isNaN(ts)) {
-    const pct = Math.min(100, Math.max(0, ((ts - winStart) / spanMs) * 100));
-    el.value = pct;
-  } else {
-    el.value = 0;
-  }
+  const ts=new Date(el.dataset.ts||''); if(!isNaN(ts)){ el.value = Math.min(100, Math.max(0, ((ts-winStart)/spanMs)*100)); } else { el.value=0; }
 });
 
-// Chart.js（自适应不溢出）
+/* ---------- 重要性理由弹窗 ---------- */
+function openReason(txt){ const d=document.getElementById('dlg-reason'); document.getElementById('reason-text').textContent = txt||'（无）'; d.showModal(); }
+document.querySelectorAll('.info-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> openReason(btn.dataset.reason || ''));
+});
+
+/* ---------- 周览小窗：按天统计 + 列表 ---------- */
+document.getElementById('btn-week').onclick=()=>{
+  const dmap = new Map(); // yyyy-mm-dd -> [cards]
+  [...document.querySelectorAll('.meta-time')].forEach(t=>{
+    const d = new Date(t.dataset.ts||t.textContent); if(isNaN(d)) return;
+    const key = d.toISOString().slice(0,10);
+    if(!dmap.has(key)) dmap.set(key, []);
+    dmap.get(key).push(t.closest('.item'));
+  });
+  const days = []; let cursor=new Date(winStart); cursor.setHours(0,0,0,0);
+  while (cursor <= winEnd) { days.push(cursor.toISOString().slice(0,10)); cursor=new Date(cursor.getTime()+86400000); }
+  const maxCnt = Math.max(1, ...days.map(k => (dmap.get(k)||[]).length));
+
+  const bars = document.getElementById('week-bars'); bars.innerHTML='';
+  const list = document.getElementById('week-list'); list.innerHTML='';
+  days.forEach(k=>{
+    const cnt = (dmap.get(k)||[]).length;
+    const pct = Math.round(cnt*100/maxCnt);
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <div class="flex items-center gap-3">
+        <div class="w-24 text-sm">${k} <span class="opacity-60">${WEEKDAY[new Date(k).getDay()]}</span></div>
+        <progress class="progress progress-secondary h-2 flex-1" value="${pct}" max="100"></progress>
+        <div class="w-10 text-right text-sm">${cnt}</div>
+      </div>`;
+    bars.appendChild(wrap);
+
+    if (cnt){
+      const ul = document.createElement('ul'); ul.className='list-disc list-inside';
+      (dmap.get(k)||[]).slice(0,10).forEach(card=>{
+        const id = card.id || card.closest('[id]')?.id;
+        const title = card.querySelector('.item-title')?.textContent?.trim() || '';
+        const li = document.createElement('li');
+        li.innerHTML = `<a class="link" href="#${id}">${title}</a>`;
+        ul.appendChild(li);
+      });
+      const box = document.createElement('div');
+      box.className='mt-2';
+      box.innerHTML = `<div class="font-semibold mt-2">${k}</div>`;
+      box.appendChild(ul);
+      list.appendChild(box);
+    }
+  });
+
+  document.getElementById('dlg-week').showModal();
+};
+
+/* ---------- 收藏/分享 ---------- */
+function copyLink(id){ const url=`${location.origin}${location.pathname}#${id}`; navigator.clipboard.writeText(url); }
+(function stars(){
+  const key='watchlist'; const store=new Set(JSON.parse(localStorage.getItem(key)||'[]'));
+  document.querySelectorAll('.star').forEach(btn=>{
+    const id = btn.dataset.id;
+    const paint=()=>btn.textContent = store.has(id)?'★':'☆';
+    paint();
+    btn.onclick=()=>{ if(store.has(id)) store.delete(id); else store.add(id); localStorage.setItem(key, JSON.stringify([...store])); paint(); };
+  });
+})();
+
+/* ---------- 导出 Markdown / 打印 ---------- */
+function gatherVisibleCards(){ return [...document.querySelectorAll('.item')].filter(el=>el.offsetParent!==null); }
+document.getElementById('btn-export').onclick=()=>{
+  let md = `# 编译器周报 ${document.body.dataset.windowStart.slice(0,10)} ~ ${document.body.dataset.windowEnd.slice(0,10)}\n\n`;
+  const ov=document.getElementById('overview'); if(ov) md+=`## 本周综述\n${ov.innerText}\n\n`;
+  md += `## 可见条目\n`;
+  gatherVisibleCards().forEach(el=>{
+    const title = el.querySelector('.item-title')?.textContent?.trim() || '';
+    const one   = el.querySelector('.one-liner')?.textContent?.trim() || '';
+    const link  = el.querySelector('a[target=_blank]')?.href || '';
+    md += `- **${title}**  ${one}  ${link?`[原文](${link})`:''}\n`;
+  });
+  const blob=new Blob([md],{type:'text/markdown;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`weekly-${document.body.dataset.windowEnd.slice(0,10)}.md`; a.click(); URL.revokeObjectURL(a.href);
+};
+document.getElementById('btn-print').onclick=()=>window.print();
+
+/* ---------- 图表 ---------- */
 const srcLabels = {{ (sources | map(attribute=0) | list) | tojson }};
 const srcData   = {{ (sources | map(attribute=1) | list) | tojson }};
 const projLabels= {{ (proj_counts | map(attribute=0) | list) | tojson }};
@@ -304,6 +480,9 @@ new Chart(document.getElementById('pieProjects'), {
   data: { labels: projLabels, datasets: [{ data: projData }] },
   options: { responsive:true, maintainAspectRatio:false }
 });
+
+/* ---------- 初始化 ---------- */
+applyFilter();
 </script>
 </body>
 </html>
