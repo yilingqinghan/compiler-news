@@ -5,120 +5,305 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>编译器周报 {{ start }} ~ {{ end }}</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { theme:{ extend:{} } }</script>
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    .sticky-col{ position: sticky; top: 1rem; height: calc(100vh - 2rem); }
+    .card-tight .card-body{ gap:.5rem; }
+    .chart-wrap{ height: 22rem; }
+  </style>
 </head>
-<body class="bg-base-100">
-  <div class="max-w-6xl mx-auto p-4 md:p-6">
-    <div class="flex flex-col md:flex-row gap-4">
-      <!-- 左侧导航 -->
-      <aside class="md:w-64">
-        <div class="sticky top-4 card bg-base-200 shadow">
-          <div class="card-body">
+<body class="bg-base-100"
+      data-window-start="{{ start }}T00:00:00"
+      data-window-end="{{ end }}T23:59:59">
+  <div class="mx-auto w-full max-w-[1600px] p-4 md:p-6 grid md:grid-cols-12 gap-6">
+    <!-- 左侧：导航/过滤 -->
+    <aside class="md:col-span-2 xl:col-span-2">
+      <div class="sticky-col card bg-base-200 shadow">
+        <div class="card-body">
+          <div class="flex items-center justify-between">
             <h2 class="card-title">导航</h2>
-            <ul class="menu menu-sm">
-              <li><a href="#top">封面 Top</a></li>
-              {% for g in groups.keys()|list %}
-                <li><a href="#{{ g | replace(' ','-') }}">{{ g }}</a></li>
-              {% endfor %}
-              <li><a href="#sources">数据来源</a></li>
-            </ul>
-          </div>
-        </div>
-      </aside>
-
-      <!-- 主区 -->
-      <main class="flex-1">
-        <div id="top" class="mb-6">
-          <h1 class="text-3xl font-bold">编译器周报 <span class="text-base-content/60">{{ start }} ~ {{ end }}</span></h1>
-          <p class="text-base-content/70 mt-1">自动聚合：LLVM 专区、Kernel/Toolchain、Rust 等；仅统计最近一周。</p>
-        </div>
-
-        <!-- 封面 Top -->
-        <section class="grid md:grid-cols-2 gap-4">
-          {% for it in top %}
-          {% set s = it.summary %}
-          <div class="card bg-base-200 shadow">
-            <div class="card-body">
-              <div class="flex items-center gap-2">
-                <h3 class="card-title">{{ s.title or it.title }}</h3>
-                {% set p = s.priority or it.priority %}
-                <div class="badge {{ 'badge-error' if p=='high' else 'badge-warning' if p=='medium' else 'badge-success' }}">{{ p }}</div>
-              </div>
-              {% if s.context %}<p class="text-base-content/70">{{ s.context }}</p>{% endif %}
-              {% if s.key_points %}
-              <ul class="list-disc list-inside text-sm">
-                {% for k in s.key_points[:5] %}<li>{{ k }}</li>{% endfor %}
-              </ul>
-              {% endif %}
-              {% if s.links %}
-                <a class="link" target="_blank" href="{{ s.links[0] }}">{{ s.links[0] }}</a>
-              {% endif %}
-              {% if s.tags %}
-              <div class="mt-2 flex flex-wrap gap-1">
-                {% for t in s.tags %}<div class="badge badge-outline">{{ t }}</div>{% endfor %}
-              </div>
-              {% endif %}
+            <div class="join">
+              <button class="btn btn-xs join-item" id="btn-zh">中文</button>
+              <button class="btn btn-xs join-item btn-ghost" id="btn-en">English</button>
             </div>
           </div>
-          {% endfor %}
-        </section>
 
-        <!-- 分组板块（LLVM 专区优先） -->
-        {% for g, items in groups.items() %}
-        <section id="{{ g | replace(' ','-') }}" class="mt-10">
-          <h2 class="text-2xl font-bold mb-3">{{ g }}</h2>
-          <div class="space-y-3">
-            {% for it in items %}
-              {% set s = it.summary %}
-              <div class="card bg-base-100 border border-base-200">
-                <div class="card-body">
-                  <div class="flex items-center gap-2">
-                    <h3 class="card-title">{{ s.title or it.title }}</h3>
-                    {% set p = s.priority or it.priority %}
-                    <div class="badge {{ 'badge-error' if p=='high' else 'badge-warning' if p=='medium' else 'badge-success' }}">{{ p }}</div>
-                    <div class="text-xs text-base-content/60">{{ it.latest_ts }}</div>
-                  </div>
-                  {% if s.context %}<p class="text-base-content/70">{{ s.context }}</p>{% endif %}
-                  {% if s.key_points %}
-                    <ul class="list-disc list-inside text-sm">
-                      {% for k in s.key_points %}<li>{{ k }}</li>{% endfor %}
-                    </ul>
+          <ul class="menu">
+            {% for g in nav_groups %}
+            <li><a href="#{{ 'Top' if g=='封面 Top' else g | replace(' ','-') }}">{{ g }}</a></li>
+            {% endfor %}
+            <li><a href="#sources">数据来源</a></li>
+          </ul>
+
+          <div class="divider my-2"></div>
+          <h3 class="font-semibold">筛选</h3>
+          <select id="flt-arch" class="select select-bordered select-sm w-full">
+            <option value="">全部架构</option>
+            {% for a in arches or [] %}<option value="{{ a }}">{{ a }}</option>{% endfor %}
+          </select>
+          <select id="flt-proj" class="select select-bordered select-sm w-full mt-2">
+            <option value="">全部项目</option>
+            {% for p in projects or [] %}<option value="{{ p }}">{{ p }}</option>{% endfor %}
+          </select>
+          <div class="mt-2 flex gap-2">
+            <button class="btn btn-sm" onclick="applyFilter()">应用</button>
+            <button class="btn btn-sm btn-ghost" onclick="resetFilter()">重置</button>
+          </div>
+
+          <div class="divider my-2"></div>
+          <h3 class="font-semibold">展开/折叠</h3>
+          <div class="flex gap-2">
+            <button class="btn btn-sm" onclick="toggleAll(true)">全部展开</button>
+            <button class="btn btn-sm btn-ghost" onclick="toggleAll(false)">全部收起</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 右侧主体 -->
+    <main class="md:col-span-10 xl:col-span-10">
+      <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-bold">编译器周报 <span class="text-base-content/60">{{ start }} ~ {{ end }}</span></h1>
+      </div>
+      <p class="text-base-content/70 mt-1">自动聚合：LLVM、GCC、Rust、Swift、V8、GraalVM、Wasmtime、Zig；仅统计最近一周。</p>
+
+      {% if overview %}
+      <div class="card bg-base-200 shadow mt-4">
+        <div class="card-body prose max-w-none">
+          <h2 class="card-title">本周综述</h2>
+          <div id="overview" data-md="{{ overview | replace('"','&quot;') | replace('\n','&#10;') }}"></div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- 封面 Top -->
+      <section id="Top" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mt-6">
+        {% for it in top %}
+        {% set s = it.summary %}
+        <div class="group card card-tight bg-base-200 shadow card-compact item transition-all duration-200
+                    hover:shadow-xl hover:-translate-y-0.5 hover:border-base-300"
+             data-proj="{{ (it.projects or []) | join(',') }}"
+             data-tags="{{ (s.tags or []) | join(',') }}">
+          <div class="card-body">
+            <!-- 标题行：单行省略 -->
+            <h3 class="text-lg font-semibold truncate item-title"
+                title="{{ s.title_zh or s.title }}"
+                data-en="{{ s.title or it.title }}"
+                data-zh="{{ s.title_zh or s.title }}">
+              {{ s.title_zh or s.title }}
+            </h3>
+
+            <!-- meta 行：优先级 + 时间 + 星期 -->
+            <div class="flex items-center gap-3 text-xs text-base-content/70">
+              {% set p = s.priority or it.priority %}
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full
+                           {{ 'bg-red-100 text-red-700' if p=='high' else
+                              'bg-amber-100 text-amber-700' if p=='medium' else
+                              'bg-emerald-100 text-emerald-700' }}">
+                {{ '🔥' if p=='high' else '⚠️' if p=='medium' else '✅' }} {{ p }}
+              </span>
+              <span class="inline-flex items-center gap-1">
+                🗓️ <time class="meta-time" data-ts="{{ it.latest_ts }}">{{ it.latest_ts }}</time>
+                <span class="weekday opacity-70"></span>
+              </span>
+            </div>
+
+            <!-- 周内进度条 -->
+            <progress class="progress progress-primary h-1 w-full mt-1 progress-week"
+                      value="0" max="100" data-ts="{{ it.latest_ts }}"></progress>
+
+            <div class="collapse collapse-arrow border border-base-300 rounded-box mt-1">
+              <input type="checkbox"/>
+              <div class="collapse-title text-sm">{{ (s.digest_zh or s.key_points_zh or s.key_points or []) | length }} 条解读 / 详情</div>
+              <div class="collapse-content">
+                <div class="digest-md text-sm mb-2" data-md="{{ (s.digest_zh or []) | join('\n') }}"></div>
+                <p class="item-context text-base-content/70" data-en="{{ s.context }}" data-zh="{{ s.context_zh or s.context }}">{{ s.context_zh or s.context }}</p>
+                {% if s.key_points or s.key_points_zh %}
+                  <ul class="list-disc list-inside text-sm item-kp"
+                      data-en="{{ (s.key_points or [])|join('||') }}"
+                      data-zh="{{ (s.key_points_zh or s.key_points or [])|join('||') }}">
+                    {% for k in (s.key_points_zh or s.key_points or []) %}<li>{{ k }}</li>{% endfor %}
+                  </ul>
+                {% endif %}
+                {% set link0 = (s.links[0] if s.links and (s.links[0]|string).startswith('http') and (s.links[0]|string) != '#error' else None) %}
+                {% if link0 %}
+                <a class="btn btn-sm mt-2" target="_blank" href="{{ link0 }}" data-i18n="view">查看原文</a>
+                {% endif %}
+              </div>
+            </div>
+            {% if s.tags %}<div class="mt-2 flex flex-wrap gap-1">{% for t in s.tags %}<div class="badge badge-outline">{{ t }}</div>{% endfor %}</div>{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </section>
+
+      <!-- 各分组 -->
+      {% for g, items in groups.items() %}
+      <section id="{{ g | replace(' ','-') }}" class="mt-10">
+        <h2 class="text-2xl font-bold mb-3">{{ g }}</h2>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          {% for it in items %}
+          {% set s = it.summary %}
+          <div class="group card card-tight bg-base-100 border border-base-200 item transition-all duration-200
+                      hover:shadow-xl hover:-translate-y-0.5 hover:border-base-300"
+               data-proj="{{ (it.projects or []) | join(',') }}"
+               data-tags="{{ (s.tags or []) | join(',') }}">
+            <div class="card-body">
+              <h3 class="text-lg font-semibold truncate item-title"
+                  title="{{ s.title_zh or s.title }}"
+                  data-en="{{ s.title or it.title }}"
+                  data-zh="{{ s.title_zh or s.title }}">
+                {{ s.title_zh or s.title }}
+              </h3>
+              <div class="flex items-center gap-3 text-xs text-base-content/70">
+                {% set p = s.priority or it.priority %}
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full
+                             {{ 'bg-red-100 text-red-700' if p=='high' else
+                                'bg-amber-100 text-amber-700' if p=='medium' else
+                                'bg-emerald-100 text-emerald-700' }}">
+                  {{ '🔥' if p=='high' else '⚠️' if p=='medium' else '✅' }} {{ p }}
+                </span>
+                <span class="inline-flex items-center gap-1">
+                  🗓️ <time class="meta-time" data-ts="{{ it.latest_ts }}">{{ it.latest_ts }}</time>
+                  <span class="weekday opacity-70"></span>
+                </span>
+              </div>
+              <progress class="progress progress-primary h-1 w-full mt-1 progress-week"
+                        value="0" max="100" data-ts="{{ it.latest_ts }}"></progress>
+
+              <div class="collapse collapse-arrow border border-base-300 rounded-box mt-1">
+                <input type="checkbox"/>
+                <div class="collapse-title text-sm">{{ (s.digest_zh or s.key_points_zh or s.key_points or []) | length }} 条解读 / 详情</div>
+                <div class="collapse-content">
+                  <div class="digest-md text-sm mb-2" data-md="{{ (s.digest_zh or []) | join('\n') }}"></div>
+                  <p class="item-context text-base-content/70" data-en="{{ s.context }}" data-zh="{{ s.context_zh or s.context }}">{{ s.context_zh or s.context }}</p>
+                  {% if s.key_points or s.key_points_zh %}
+                  <ul class="list-disc list-inside text-sm item-kp"
+                      data-en="{{ (s.key_points or [])|join('||') }}"
+                      data-zh="{{ (s.key_points_zh or s.key_points or [])|join('||') }}">
+                    {% for k in (s.key_points_zh or s.key_points or []) %}<li>{{ k }}</li>{% endfor %}
+                  </ul>
                   {% endif %}
-                  {% if s.links %}
-                    <div class="mt-1 text-sm">
-                      {% for l in s.links %}<a class="link" target="_blank" href="{{ l }}">{{ l }}</a><br/>{% endfor %}
-                    </div>
-                  {% endif %}
-                  {% if s.tags %}
-                  <div class="mt-2 flex flex-wrap gap-1">
-                    {% for t in s.tags %}<div class="badge badge-outline">{{ t }}</div>{% endfor %}
-                  </div>
+                  {% set link0 = (s.links[0] if s.links and (s.links[0]|string).startswith('http') and (s.links[0]|string) != '#error' else None) %}
+                  {% if link0 %}
+                  <a class="btn btn-sm mt-2" target="_blank" href="{{ link0 }}" data-i18n="view">查看原文</a>
                   {% endif %}
                 </div>
               </div>
-            {% endfor %}
+              {% if s.tags %}<div class="mt-2 flex flex-wrap gap-1">{% for t in s.tags %}<div class="badge badge-outline">{{ t }}</div>{% endfor %}</div>{% endif %}
+            </div>
           </div>
-        </section>
-        {% endfor %}
+          {% endfor %}
+        </div>
+      </section>
+      {% endfor %}
 
-        <!-- 数据来源 -->
-        <section id="sources" class="mt-12">
-          <h2 class="text-2xl font-bold mb-3">数据来源 & 覆盖统计（最近一周）</h2>
-          <div class="overflow-x-auto">
-            <table class="table table-sm">
-              <thead><tr><th>来源</th><th>条数</th></tr></thead>
-              <tbody>
-                {% for (src, cnt) in sources %}
-                  <tr><td>{{ src }}</td><td>{{ cnt }}</td></tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-          <p class="text-sm text-base-content/60 mt-2">包含：LLVM Discourse、LLVM Blog、LLVM Weekly、GitHub PR/Commits、LWN、Phoronix、Rust Blog …</p>
-        </section>
-      </main>
-    </div>
+      <!-- 统计 -->
+      <section id="sources" class="mt-12">
+        <h2 class="text-2xl font-bold mb-3">数据来源统计（最近一周）</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="chart-wrap card bg-base-200 p-3 overflow-hidden"><canvas id="barSources"></canvas></div>
+          <div class="chart-wrap card bg-base-200 p-3 overflow-hidden"><canvas id="pieProjects"></canvas></div>
+        </div>
+      </section>
+    </main>
   </div>
+
+<script>
+let lang = 'zh';
+const i18n = { zh:{view:"查看原文"}, en:{view:"View Source"} };
+function setLang(l){
+  lang=l;
+  document.getElementById('btn-zh').classList.toggle('btn-ghost', l!=='zh');
+  document.getElementById('btn-en').classList.toggle('btn-ghost', l!=='en');
+  document.querySelectorAll('.item-title').forEach(el=>{
+    el.textContent = el.dataset[l] || el.dataset['en'] || el.textContent;
+  });
+  document.querySelectorAll('.item-context').forEach(el=>{
+    el.textContent = el.dataset[l] || el.dataset['en'] || el.textContent;
+  });
+  document.querySelectorAll('.item-kp').forEach(el=>{
+    const arr = (el.dataset[l] || el.dataset['en'] || '').split('||').filter(Boolean);
+    el.innerHTML = arr.map(x=>`<li>${x}</li>`).join('');
+  });
+  document.querySelectorAll('[data-i18n="view"]').forEach(el=>{
+    el.textContent = (i18n[l]||i18n.zh).view;
+  });
+}
+document.getElementById('btn-zh').onclick=()=>setLang('zh');
+document.getElementById('btn-en').onclick=()=>setLang('en');
+setLang('zh');
+
+// 渲染“本周综述”的 Markdown
+const ov = document.getElementById('overview');
+if (ov) {
+  const md = ov.dataset.md || '';
+  ov.innerHTML = marked.parse(md);
+}
+
+// 渲染每张卡片的 digest（数组 -> Markdown 列表）
+document.querySelectorAll('.digest-md').forEach(el=>{
+  const md = (el.dataset.md || '').trim();
+  if (!md) return;
+  const list = md.split('\n').map(x => x.trim()).filter(Boolean)
+                 .map(x => x.startsWith('- ') ? x : ('- ' + x)).join('\n');
+  el.innerHTML = marked.parse(list);
+});
+
+// 过滤（按项目/架构标签）
+function applyFilter(){
+  const proj = (document.getElementById('flt-proj')?.value || '').trim();
+  const arch = (document.getElementById('flt-arch')?.value || '').trim();
+  document.querySelectorAll('.item').forEach(el=>{
+    const ps = (el.dataset.proj||''); const ts = (el.dataset.tags||'');
+    const okProj = !proj || ps.split(',').includes(proj);
+    const okArch = !arch || ts.split(',').includes(arch);
+    el.style.display = (okProj && okArch) ? '' : 'none';
+  });
+}
+function resetFilter(){ const p=document.getElementById('flt-proj'); const a=document.getElementById('flt-arch'); if(p)p.value=''; if(a)a.value=''; applyFilter(); }
+function toggleAll(expand){ document.querySelectorAll('.collapse > input[type=checkbox]').forEach(cb=>cb.checked = !!expand); }
+
+// 时间/星期/进度条
+const WEEKDAY = ['周日','周一','周二','周三','周四','周五','周六'];
+const winStart = new Date(document.body.dataset.windowStart);
+const winEnd   = new Date(document.body.dataset.windowEnd);
+const spanMs = Math.max(1, (winEnd - winStart));
+
+document.querySelectorAll('.meta-time').forEach(el=>{
+  const ts = new Date(el.dataset.ts || el.textContent);
+  if (!isNaN(ts)) {
+    const wd = WEEKDAY[ts.getDay()];
+    el.parentElement.querySelector('.weekday').textContent = wd;
+  }
+});
+document.querySelectorAll('.progress-week').forEach(el=>{
+  const ts = new Date(el.dataset.ts || '');
+  if (!isNaN(ts)) {
+    const pct = Math.min(100, Math.max(0, ((ts - winStart) / spanMs) * 100));
+    el.value = pct;
+  } else {
+    el.value = 0;
+  }
+});
+
+// Chart.js（自适应不溢出）
+const srcLabels = {{ (sources | map(attribute=0) | list) | tojson }};
+const srcData   = {{ (sources | map(attribute=1) | list) | tojson }};
+const projLabels= {{ (proj_counts | map(attribute=0) | list) | tojson }};
+const projData  = {{ (proj_counts | map(attribute=1) | list) | tojson }};
+new Chart(document.getElementById('barSources'), {
+  type: 'bar',
+  data: { labels: srcLabels, datasets: [{ label: '条目数', data: srcData }] },
+  options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ x:{ ticks:{ maxRotation:60, minRotation:30 } } } }
+});
+new Chart(document.getElementById('pieProjects'), {
+  type: 'pie',
+  data: { labels: projLabels, datasets: [{ data: projData }] },
+  options: { responsive:true, maintainAspectRatio:false }
+});
+</script>
 </body>
 </html>

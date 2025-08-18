@@ -1,176 +1,126 @@
-import os
-import json
-import time
-from typing import List, Dict, Any
-
-import meilisearch
-from meilisearch.errors import MeilisearchApiError
+# pipelines/index_search.py
+# -*- coding: utf-8 -*-
+import os, json, time, requests, meilisearch
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 from dotenv import load_dotenv
-
-from pipelines.util import pg_conn
+from datetime import datetime
+from pipelines.util import pg_conn, ensure_tables
 
 load_dotenv()
-
-HOST = os.getenv("MEILI_HOST", "http://localhost:7700").rstrip("/")
+HOST   = os.getenv("MEILI_HOST", "http://localhost:7700").rstrip("/")
 MASTER = os.getenv("MEILI_MASTER_KEY", "master_key_change_me")
-INDEX = "intel_clusters"
+INDEX  = "intel_clusters"
 
+def env_jinja():
+    return Environment(loader=FileSystemLoader("web/templates"),
+                       autoescape=select_autoescape(["html"]))
 
-def wait_for_meili(client: meilisearch.Client, timeout: float = 30.0) -> None:
-    """阻塞直到 Meilisearch 可用，否则抛错。"""
-    deadline = time.time() + timeout
+def wait_for_meili(host, master, tries=18, base_delay=0.4):
     last_err = None
-    while time.time() < deadline:
+    url = host.rstrip("/") + "/health"
+    headers = {"Authorization": f"Bearer {master}", "X-Meili-API-Key": master}
+    for i in range(tries):
         try:
-            h = client.health()  # {'status': 'available'}
-            if isinstance(h, dict) and h.get("status") == "available":
+            r = requests.get(url, headers=headers, timeout=2.5)
+            if r.ok and (r.json().get("status") in ("available","healthy","ready")):
                 return
+            last_err = RuntimeError(f"health={r.text}")
         except Exception as e:
             last_err = e
-        time.sleep(1.0)
+        time.sleep(base_delay * (1.5 ** i))
     raise RuntimeError(
-        f"Meilisearch 未就绪或无法访问（HOST={HOST}）。"
-        f"请确认容器/服务已启动并端口可达。最近一次错误：{last_err}"
+        f"Meilisearch 未就绪或无法访问（HOST={host}）。请确认服务已启动。最近一次错误：{last_err}"
     )
 
-
-def ensure_index(client: meilisearch.Client, uid: str, primary_key: str = "cluster_id"):
-    """确保索引存在；不存在时创建。返回 Index 对象。"""
-    try:
-        return client.get_index(uid)
-    except MeilisearchApiError as e:
-        # 可能是 404 不存在；其他错误继续抛出
-        msg = str(e).lower()
-        if "404" in msg or "not found" in msg:
-            task = client.create_index(uid, {"primaryKey": primary_key})
-            # 等待任务完成（部分 SDK 需要轮询；这里做一个简易等待）
-            time.sleep(0.3)
-            return client.get_index(uid)
-        raise
-
-
-def get_latest_ts(conn, cid: str):
+def get_latest_ts(conn, cid):
     cur = conn.cursor()
-    cur.execute(
-        """
-        SELECT MAX(a.ts) FROM clusters c
-        JOIN articles_clean a ON a.id=c.id
-        WHERE c.cluster_id=%s
-        """,
-        (cid,),
-    )
+    cur.execute("""
+      SELECT MAX(a.ts) FROM clusters c
+      JOIN articles_clean a ON a.id=c.id
+      WHERE c.cluster_id=%s
+    """, (cid,))
     ts = cur.fetchone()[0]
     cur.close()
     return ts.isoformat() if ts else None
 
-
-def build_docs(conn) -> List[Dict[str, Any]]:
+def build_docs(conn):
     cur = conn.cursor()
-    cur.execute(
-        "SELECT cluster_id, title, summary FROM clusters ORDER BY created_at DESC;"
-    )
-    rows = cur.fetchall()
-    cur.close()
-
+    cur.execute("SELECT cluster_id, title, summary FROM clusters ORDER BY created_at DESC;")
+    rows = cur.fetchall(); cur.close()
     docs = []
     for cid, title, summary in rows:
         js = summary if isinstance(summary, dict) else json.loads(summary or "{}")
-        tags = js.get("tags", []) or []
-
-        doc = {
+        tags = js.get("tags") or []
+        docs.append({
             "cluster_id": cid,
             "title": js.get("title") or title or "(no title)",
-            "text": js.get("context", "") or "",
-            "key_points": js.get("key_points", []) or [],
+            "title_zh": js.get("title_zh") or "",
+            "text": js.get("context","") or "",
+            "context_zh": js.get("context_zh","") or "",
+            "key_points": js.get("key_points") or [],
+            "key_points_zh": js.get("key_points_zh") or [],
             "tags": tags,
-            "priority": js.get("priority", "low"),
-            "links": js.get("links", []) or [],
-            "projects": [],
-            "topics": [],
-            "arches": [],
+            "priority": (js.get("priority") or "low"),
+            "links": js.get("links") or [],
+            "projects": [t for t in tags if t in ["LLVM","GCC","Rust","Swift","V8","GraalVM","Cranelift/Wasmtime","Zig"]],
+            "topics":   [t for t in tags if t in ["Release","Regression","Performance","Backend/Target","IR/Pass","Toolchain","Weekly","Commits","Patches"]],
+            "arches":   [t for t in tags if t in ["RISC-V","ARM64","x86_64","PowerPC","MIPS","WASM","GPU"]],
+            "lang": js.get("lang","en"),
             "date": get_latest_ts(conn, cid),
-        }
-
-        # 从 tags 粗分回 projects/topics/arches
-        for t in tags:
-            if t in [
-                "LLVM",
-                "GCC",
-                "Rust",
-                "Swift",
-                "Linux Kernel",
-                "V8",
-                "GraalVM",
-                "Cranelift/Wasmtime",
-                "Others",
-            ]:
-                doc["projects"].append(t)
-
-        for k in [
-            "Release",
-            "Regression",
-            "Performance",
-            "Backend/Target",
-            "IR/Pass",
-            "Toolchain",
-        ]:
-            if k in tags:
-                doc["topics"].append(k)
-
-        for k in ["RISC-V", "ARM64", "x86_64", "PowerPC", "MIPS", "WASM", "GPU"]:
-            if k in tags:
-                doc["arches"].append(k)
-
-        docs.append(doc)
+        })
     return docs
 
-
 def main():
-    # 1) 连接 Meili 并等待可用
-    client = meilisearch.Client(HOST, MASTER)
-    wait_for_meili(client)
-
-    # 2) 确保索引存在
-    idx = ensure_index(client, INDEX, primary_key="cluster_id")
-
-    # 3) 准备文档（一次数据库连接）
+    ensure_tables()
     conn = pg_conn()
     docs = build_docs(conn)
     conn.close()
 
-    if not docs:
-        print("[index] 没有可索引的文档（clusters 为空），跳过。")
-        return
+    meili_ok = False
+    public_key = os.getenv("MEILI_PUBLIC_KEY", "")
 
-    # 4) 写入文档
-    idx.add_documents(docs)  # primaryKey 已在建索引时设置
-
-    # 5) 设置索引属性
-    idx.update_searchable_attributes(["title", "text", "key_points", "tags"])
-    idx.update_filterable_attributes(["projects", "topics", "arches", "priority", "date"])
-    idx.update_sortable_attributes(["date"])
-
-    # 6) 创建只读 search key（用于前端）
     try:
-        key_obj = client.create_key(
-            {
-                "name": "public-search",
-                "description": "public search key for intel_clusters",
-                "actions": ["search"],
-                "indexes": [INDEX],
-            }
-        )
-        # 新版 SDK 返回字典里是 'key'；若老版不同，这里再兜底取 'uid'
-        pub_key = key_obj.get("key") or key_obj.get("uid")
-        if pub_key:
-            print("[search-key]", pub_key)
-        else:
-            print("[search-key] 创建成功但未返回 key 字段，请在 Meili 控制台检查。")
-    except MeilisearchApiError as e:
-        print("[search-key] 创建失败：", e)
+        wait_for_meili(HOST, MASTER)
+        client = meilisearch.Client(HOST, MASTER)
+        idx = client.index(INDEX)
+        # 创建索引（已存在则忽略）
+        try:
+            client.create_index(INDEX, {"primaryKey":"cluster_id"})
+        except Exception:
+            pass
 
-    print(f"[index] upsert {len(docs)} docs -> {HOST} index={INDEX}")
+        if docs:
+            idx.add_documents(docs)
+            idx.update_searchable_attributes(["title","title_zh","text","context_zh","key_points","key_points_zh","tags"])
+            idx.update_filterable_attributes(["projects","topics","arches","priority","date","lang","tags"])
+            idx.update_sortable_attributes(["date"])
 
+        if not public_key:
+            try:
+                key = client.create_key({
+                    "name":"public-search",
+                    "actions":["search"],
+                    "indexes":[INDEX]
+                })
+                public_key = key.get("key","")
+            except Exception:
+                public_key = ""
+
+        meili_ok = True
+        print(f"[index] indexed {len(docs)} docs -> {HOST} index={INDEX}")
+    except Exception as e:
+        print("[index] WARN:", e)
+        meili_ok = False
+
+    # 渲染检索页（即使 meili 不可用也输出）
+    env = env_jinja()
+    os.makedirs("web/dist", exist_ok=True)
+    html = env.get_template("search.html.j2").render(
+        meili_host=(HOST if meili_ok else ""),
+        meili_key=(public_key if meili_ok else ""),
+    )
+    with open("web/dist/search.html","w",encoding="utf-8") as f: f.write(html)
+    print("[search] -> web/dist/search.html (meili_ok=", meili_ok, ")")
 
 if __name__ == "__main__":
     main()

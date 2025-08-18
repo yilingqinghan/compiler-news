@@ -44,3 +44,21 @@ host_hints:
   Rust: [ "rust-lang.org", "blog.rust-lang.org" ]
   Swift: [ "swift.org", "forums.swift.org" ]
   Linux Kernel: [ "kernel.org", "lwn.net", "phoronix.com" ]
+
+projects:
+  Rust: [ "(?i)\\brust\\b", "(?i)rustc", "(?i)cargo" ]
+  Swift: [ "(?i)\\bswift\\b", "(?i)swiftc", "(?i)swift\\s+evolution" ]
+  V8: [ "(?i)\\bv8\\b", "(?i)turbofan|maglev" ]
+  GraalVM: [ "(?i)graalvm|jvmci" ]
+  Cranelift/Wasmtime: [ "(?i)cranelift|wasmtime|wasm" ]
+  Zig: [ "(?i)\\bzig\\b" ]
+
+noise_low:
+  - "(?i)\\bNFC\\b"
+  - "(?i)clang[- ]?format"
+  - "(?i)whitespace|formatting|typo"
+  - "(?i)^revert"
+  - "(?i)^merge pull request"
+
+arches:
+  WASM: [ "(?i)wasm|webassembly" ]
