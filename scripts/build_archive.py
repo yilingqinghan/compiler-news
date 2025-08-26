@@ -24,5 +24,6 @@ def main():
 </body>"""
     with open(f"{DIST}/index.html","w",encoding="utf-8") as f: f.write(html)
 
+from pipelines.util import run_cli
 if __name__ == "__main__":
-    main()
+    run_cli(main)

@@ -77,7 +77,41 @@ def _first_valid_link(js):
     return None
 
 def _window():
-    end = datetime.now(); start = end - timedelta(days=TIME_WINDOW_DAYS); return start, end
+    """
+    WINDOW_MODE:
+      - "rolling"      : 滚动 TIME_WINDOW_DAYS 天（默认）
+      - "week_to_date" : 本周一 00:00 -> 现在
+      - "last_week"    : 上周一 00:00 -> 上周日 23:59
+    WEEK_START: 一周起始（1=周一, 0=周日）。默认 1。
+    """
+    mode = os.getenv("WINDOW_MODE", "rolling").lower()
+    week_start = int(os.getenv("WEEK_START", "1"))  # 1=Mon, 0=Sun
+    now = datetime.now()
+
+    if mode == "week_to_date":
+        # 找到本周的周起始
+        # Python: Monday=0..Sunday=6；我们把 week_start=1 映射到 Monday=0
+        py_week_start = (week_start - 1) % 7
+        delta = (now.weekday() - py_week_start) % 7
+        start = (now - timedelta(days=delta)).replace(hour=0, minute=0, second=0, microsecond=0)
+        end = now
+        return start, end
+
+    if mode == "last_week":
+        py_week_start = (week_start - 1) % 7
+        # 本周起点
+        delta = (now.weekday() - py_week_start) % 7
+        this_week_start = (now - timedelta(days=delta)).replace(hour=0, minute=0, second=0, microsecond=0)
+        # 上周起点/终点
+        start = this_week_start - timedelta(days=7)
+        end = this_week_start - timedelta(microseconds=1)
+        return start, end
+
+    # 默认：滚动 TIME_WINDOW_DAYS 天
+    days = int(os.getenv("TIME_WINDOW_DAYS", "7"))
+    start = now - timedelta(days=days)
+    end = now
+    return start, end
 
 def _md_escape(s): return (s or "").replace("\n","\n").strip()
 
@@ -208,5 +242,6 @@ def main():
     print("[weekly] ->", out, f"(window {start.date()} ~ {end.date()}, days={TIME_WINDOW_DAYS})")
     conn.close()
 
+from pipelines.util import run_cli
 if __name__ == "__main__":
-    main()
+    run_cli(main)

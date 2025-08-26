@@ -99,5 +99,6 @@ def main():
     notify_slack(all_sorted, daily_path)
     print("[publish] ok ->", daily_path)
 
+from pipelines.util import run_cli
 if __name__ == "__main__":
-    main()
+    run_cli(main)

@@ -48,5 +48,6 @@ def main():
 
     conn.close(); print("[github_events] done")
 
+from pipelines.util import run_cli
 if __name__ == "__main__":
-    main()
+    run_cli(main)

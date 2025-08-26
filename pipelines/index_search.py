@@ -5,7 +5,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from dotenv import load_dotenv
 from datetime import datetime
 from pipelines.util import pg_conn, ensure_tables
-
+from pipelines.util import run_cli, meili_ready
 load_dotenv()
 HOST   = os.getenv("MEILI_HOST", "http://localhost:7700").rstrip("/")
 MASTER = os.getenv("MEILI_MASTER_KEY", "master_key_change_me")
@@ -122,5 +122,6 @@ def main():
     with open("web/dist/search.html","w",encoding="utf-8") as f: f.write(html)
     print("[search] -> web/dist/search.html (meili_ok=", meili_ok, ")")
 
+from pipelines.util import run_cli
 if __name__ == "__main__":
-    main()
+    run_cli(main)

@@ -51,5 +51,6 @@ def main():
     cur.close(); conn.close()
     print(f"[extract] created ~{created} clean rows")
 
+from pipelines.util import run_cli
 if __name__ == "__main__":
-    main()
+    run_cli(main)

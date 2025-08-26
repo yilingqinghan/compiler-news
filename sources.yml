@@ -7,12 +7,16 @@ rss:
   - {name: llvm-weekly,                 url: http://llvmweekly.org/rss.xml,                 tags: {projects: [LLVM], topics: [Weekly]},        priority: high}
   - {name: llvm-releases,               url: https://github.com/llvm/llvm-project/releases.atom, tags: {projects: [LLVM], topics: [Release]}, priority: high}
   - {name: llvm-commits,                url: https://github.com/llvm/llvm-project/commits/main.atom, tags: {projects: [LLVM], topics: [Commits]}, priority: low}
+  - {name: llvm-prs,                url: https://github.com/llvm/llvm-project/pulls.atom, tags: {projects: [LLVM], topics: [PRs]}, priority: medium}
+  - {name: llvm-issues,                url: https://github.com/llvm/llvm-project/issues.atom, tags: {projects: [LLVM], topics: [Issues]}, priority: low}
 
   # ---- GCC 家族 ----
   - {name: gcc-announce, url: https://inbox.sourceware.org/gcc-announce/new.atom, tags: {projects: [GCC], topics: [Announcements, Release]}, priority: high}
   - {name: gcc-patches,  url: https://inbox.sourceware.org/gcc-patches/new.atom,  tags: {projects: [GCC], topics: [Patches]},               priority: medium}
   - {name: gcc-commits,  url: https://github.com/gcc-mirror/gcc/commits/master.atom, tags: {projects: [GCC], topics: [Commits]}, priority: low}
   - {name: gcc-releases, url: https://github.com/gcc-mirror/gcc/releases.atom,    tags: {projects: [GCC], topics: [Release]},               priority: high}
+  - {name: gcc-prs, url: https://github.com/gcc-mirror/gcc/pulls.atom,    tags: {projects: [GCC], topics: [PRs]},               priority: medium}
+  - {name: gcc-issues, url: https://github.com/gcc-mirror/gcc/issues.atom,    tags: {projects: [GCC], topics: [Issues]},               priority: low}
 
   # ---- 其他编译器（少量且官方）----
   - {name: rust-blog,    url: https://blog.rust-lang.org/feed.xml,                tags: {projects: [Rust], topics: [Project News]}, priority: medium}

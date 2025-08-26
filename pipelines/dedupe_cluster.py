@@ -46,5 +46,6 @@ def main():
     conn.commit(); cur2.close(); cur.close(); conn.close()
     print(f"[cluster] updated rows ~{created}, clusters={len(groups)}")
 
+from pipelines.util import run_cli
 if __name__ == "__main__":
-    main()
+    run_cli(main)
