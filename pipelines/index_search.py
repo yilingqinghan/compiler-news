@@ -1,38 +1,64 @@
 # pipelines/index_search.py
-# -*- coding: utf-8 -*-
+# ======================================================================
+#  索引构建 & 搜索页渲染
+#  - 从 clusters + articles_clean 构建文档
+#  - 推送到 Meilisearch（健康检查/创建索引/写入属性）
+#  - 自动生成 web/dist/search.html
+#  - 日志统一：彩色、阶段耗时、spinner、进度条
+# ======================================================================
+
 import os, json, time, requests, meilisearch
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from dotenv import load_dotenv
 from datetime import datetime
-from pipelines.util import pg_conn, ensure_tables
-from pipelines.util import run_cli, meili_ready
+
+from pipelines.util import pg_conn, ensure_tables, run_cli
+from pipelines.logging_utils import (
+    info, debug, warn, error, success,
+    kv_line, kv_table, status, step
+)
+
 load_dotenv()
+
 HOST   = os.getenv("MEILI_HOST", "http://localhost:7700").rstrip("/")
 MASTER = os.getenv("MEILI_MASTER_KEY", "master_key_change_me")
 INDEX  = "intel_clusters"
 
-def env_jinja():
-    return Environment(loader=FileSystemLoader("web/templates"),
-                       autoescape=select_autoescape(["html"]))
 
+# --------------------------- Jinja 环境 ---------------------------
+def env_jinja():
+    return Environment(
+        loader=FileSystemLoader("web/templates"),
+        autoescape=select_autoescape(["html"])
+    )
+
+
+# --------------------------- Meili 健康检查 ---------------------------
 def wait_for_meili(host, master, tries=18, base_delay=0.4):
+    """循环探测 /health，直到 ready 或重试次数耗尽"""
     last_err = None
     url = host.rstrip("/") + "/health"
     headers = {"Authorization": f"Bearer {master}", "X-Meili-API-Key": master}
+
     for i in range(tries):
         try:
             r = requests.get(url, headers=headers, timeout=2.5)
             if r.ok and (r.json().get("status") in ("available","healthy","ready")):
+                success("[index] Meilisearch 就绪")
                 return
             last_err = RuntimeError(f"health={r.text}")
         except Exception as e:
             last_err = e
         time.sleep(base_delay * (1.5 ** i))
+
     raise RuntimeError(
-        f"Meilisearch 未就绪或无法访问（HOST={host}）。请确认服务已启动。最近一次错误：{last_err}"
+        f"Meilisearch 未就绪或无法访问（HOST={host}）。最近一次错误：{last_err}"
     )
 
+
+# --------------------------- 辅助函数 ---------------------------
 def get_latest_ts(conn, cid):
+    """取 cluster 最新文章的时间戳"""
     cur = conn.cursor()
     cur.execute("""
       SELECT MAX(a.ts) FROM clusters c
@@ -43,10 +69,14 @@ def get_latest_ts(conn, cid):
     cur.close()
     return ts.isoformat() if ts else None
 
+
 def build_docs(conn):
+    """从 clusters 表构建待写入的文档数组"""
     cur = conn.cursor()
     cur.execute("SELECT cluster_id, title, summary FROM clusters ORDER BY created_at DESC;")
-    rows = cur.fetchall(); cur.close()
+    rows = cur.fetchall()
+    cur.close()
+
     docs = []
     for cid, title, summary in rows:
         js = summary if isinstance(summary, dict) else json.loads(summary or "{}")
@@ -70,31 +100,44 @@ def build_docs(conn):
         })
     return docs
 
+
+# --------------------------- 主流程 ---------------------------
+@step("Index & Search Page")
 def main():
     ensure_tables()
     conn = pg_conn()
-    docs = build_docs(conn)
+
+    with status("[index] 构建文档列表 …", spinner="dots"):
+        docs = build_docs(conn)
     conn.close()
+    kv_line("[index] 文档数量", total=len(docs))
 
     meili_ok = False
     public_key = os.getenv("MEILI_PUBLIC_KEY", "")
 
     try:
+        # 1) 健康检查
         wait_for_meili(HOST, MASTER)
+
+        # 2) 建立客户端/索引
         client = meilisearch.Client(HOST, MASTER)
         idx = client.index(INDEX)
-        # 创建索引（已存在则忽略）
         try:
             client.create_index(INDEX, {"primaryKey":"cluster_id"})
+            success(f"[index] 索引 {INDEX} 已创建")
         except Exception:
-            pass
+            debug(f"[index] 索引 {INDEX} 已存在")
 
+        # 3) 推送文档
         if docs:
-            idx.add_documents(docs)
+            with status("[index] 推送文档到 Meili …", spinner="dots"):
+                idx.add_documents(docs)
             idx.update_searchable_attributes(["title","title_zh","text","context_zh","key_points","key_points_zh","tags"])
             idx.update_filterable_attributes(["projects","topics","arches","priority","date","lang","tags"])
             idx.update_sortable_attributes(["date"])
+            success(f"[index] indexed {len(docs)} docs -> {HOST} index={INDEX}")
 
+        # 4) 创建公开 key（若未设置）
         if not public_key:
             try:
                 key = client.create_key({
@@ -103,25 +146,29 @@ def main():
                     "indexes":[INDEX]
                 })
                 public_key = key.get("key","")
-            except Exception:
+                success("[index] 已创建 public key")
+            except Exception as e:
+                warn(f"[index] public key 创建失败: {e}")
                 public_key = ""
 
         meili_ok = True
-        print(f"[index] indexed {len(docs)} docs -> {HOST} index={INDEX}")
+
     except Exception as e:
-        print("[index] WARN:", e)
+        error(f"[index] 处理失败: {e}")
         meili_ok = False
 
-    # 渲染检索页（即使 meili 不可用也输出）
+    # 5) 渲染搜索页（即使 meili 不可用也要输出）
     env = env_jinja()
     os.makedirs("web/dist", exist_ok=True)
     html = env.get_template("search.html.j2").render(
         meili_host=(HOST if meili_ok else ""),
         meili_key=(public_key if meili_ok else ""),
     )
-    with open("web/dist/search.html","w",encoding="utf-8") as f: f.write(html)
-    print("[search] -> web/dist/search.html (meili_ok=", meili_ok, ")")
+    with open("web/dist/search.html","w",encoding="utf-8") as f:
+        f.write(html)
+    success(f"[search] -> web/dist/search.html (meili_ok={meili_ok})")
 
-from pipelines.util import run_cli
+
+# --------------------------- CLI 入口 ---------------------------
 if __name__ == "__main__":
     run_cli(main)

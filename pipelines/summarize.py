@@ -1,308 +1,380 @@
-# -*- coding: utf-8 -*-
-"""
-Summarize clusters within a time window.
-Outputs bilingual fields + digest + one_liner + importance reasoning.
+# pipelines/summarize.py
+# ======================================================================
+#  簇摘要生成（LLM）
+#  - 统一日志：阶段耗时、spinner、进度条、汇总面板
+#  - 稳健：所有 JSON 字段用 .get() 并带默认值，杜绝 KeyError（修复 "digest_zh" 报错）
+#  - 失败降级：单簇失败仅计数，不中断流程；可选择跳过已有摘要
+#  - 窗口：rolling / week_to_date / last_week
+#  - Provider：OLLAMA / OPENAI
+# ======================================================================
 
-Env:
-- TIME_WINDOW_DAYS=7
-- LLM_PROVIDER=ollama|openai  (default: ollama)
-- OLLAMA_HOST=http://localhost:11434
-- OLLAMA_MODEL=llama3.1
-- OPENAI_API_KEY=...
-- OPENAI_BASE=https://api.openai.com/v1
-- OPENAI_MODEL=gpt-4o-mini
-"""
+from __future__ import annotations
 import os, json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from typing import Dict, Any, List, Tuple
 import requests
-from dotenv import load_dotenv
-from langdetect import detect
-from pipelines.util import ensure_tables, pg_conn
 
-load_dotenv()
-
-TIME_WINDOW_DAYS = int(os.getenv("TIME_WINDOW_DAYS", "7"))
-
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "ollama").lower()
-OLLAMA_HOST  = os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-OPENAI_BASE    = os.getenv("OPENAI_BASE", "https://api.openai.com/v1").rstrip("/")
-OPENAI_MODEL   = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-
-FIELDS_HINT = (
-    "Return ONE JSON object with keys: "
-    "title(string), context(string), key_points(array of string), impact(string), "
-    "links(array of string), tags(array of string), priority(one of high/medium/low), "
-    "importance(integer 0-100), one_liner(string), importance_reason(string). "
-    "High priority indicators: security/CVE, perf regression, ABI/behavior breaking, major release/deprecation, cross-platform breakage. "
-    "Low priority: NFC/format/typo/refactor without behavior change."
+from pipelines.util import ensure_tables, pg_conn, run_cli
+from pipelines.logging_utils import (
+    info, debug, warn, error, success,
+    kv_line, kv_table, status, new_progress, step
 )
 
-PROMPT_TMPL = """
-You are a senior compiler-intel analyst. The following materials describe one cluster (truncated).
-Please produce a compact structured summary. {fields_hint}
-DO NOT print any explanations or code fences.
+# --------------------------- 配置（可被环境变量覆盖） ---------------------------
+TIME_WINDOW_DAYS = int(os.getenv("TIME_WINDOW_DAYS", "7"))
+WINDOW_MODE      = os.getenv("WINDOW_MODE", "rolling").lower()
+WEEK_START       = int(os.getenv("WEEK_START", "1"))  # 1=Mon, 0=Sun
 
-Materials:
-{materials}
-""".strip()
+LLM_PROVIDER     = os.getenv("LLM_PROVIDER", "ollama").lower()
+# OLLAMA
+OLLAMA_HOST      = os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
+OLLAMA_MODEL     = os.getenv("OLLAMA_MODEL", "qwen2.5:3b-instruct")
+# OPENAI
+OPENAI_API_KEY   = os.getenv("OPENAI_API_KEY", "")
+OPENAI_BASE      = os.getenv("OPENAI_BASE", "https://api.openai.com/v1").rstrip("/")
+OPENAI_MODEL     = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
-DIGEST_PROMPT_TMPL = """
-用专业中文给出 2~4 条“读者友好”的要点解读（不是直译），强调：发生了什么、为何重要、影响范围、是否需要跟进。
-只输出 JSON：{{"digest_zh":["...","..."]}}
+# 行为开关
+SKIP_IF_EXISTS   = os.getenv("SUM_SKIP_IF_EXISTS", "1") == "1"   # 若已有摘要则跳过
+BATCH_LIMIT      = int(os.getenv("SUM_BATCH_LIMIT", "1000"))     # 窗口内最多处理多少簇
+MAX_ART_PER_CLU  = int(os.getenv("SUM_MAX_ART_PER_CLUSTER", "12")) # 每簇最多取多少篇生成材料
+REQ_TIMEOUT      = int(os.getenv("SUM_REQ_TIMEOUT", "120"))
 
-信息：
-标题：{title}
-上下文：{context}
-要点：
-{points}
-""".strip()
 
-def _post_json(url, payload, headers=None, timeout=180):
-    r = requests.post(url, json=payload, headers=headers or {}, timeout=timeout)
-    r.raise_for_status(); return r
-
-def llm_generate(prompt: str) -> str:
-    if LLM_PROVIDER == "ollama":
-        r = _post_json(f"{OLLAMA_HOST}/api/generate",
-                       {"model": OLLAMA_MODEL, "prompt": prompt, "stream": False})
-        return (r.json().get("response") or "").strip()
-    headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
-    data = {"model": OPENAI_MODEL, "messages":[{"role":"user","content":prompt}], "temperature": 0.1}
-    r = _post_json(f"{OPENAI_BASE}/chat/completions", data, headers=headers)
-    return r.json()["choices"][0]["message"]["content"].strip()
-
-def _iter_json_candidates(s: str):
-    depth, start = 0, -1
-    for i, ch in enumerate(s or ""):
-        if ch == "{":
-            if depth == 0: start = i
-            depth += 1
-        elif ch == "}":
-            depth -= 1
-            if depth == 0 and start >= 0:
-                txt = s[start:i+1]
-                try:
-                    js = json.loads(txt)
-                    if isinstance(js, dict): yield js
-                except Exception:
-                    pass
-
-def _best_json(s: str):
-    for js in _iter_json_candidates(s):
-        if "title" in js and "key_points" in js:
-            return js
-    return None
-
-def _sanitize_links(links):
-    out=[]
-    for u in (links or []):
-        if not u: continue
-        u=str(u).strip()
-        if not (u.startswith("http://") or u.startswith("https://")): continue
-        if u.lower() in ("#error","#"): continue
-        out.append(u)
-    return list(dict.fromkeys(out))
-
-def _fallback_summary(title, links, text, tags):
-    title = title or "(no title)"
-    text = (text or "").replace("\n"," ")
-    ctx = text[:220]
-    pts = []
-    for seg in text.split("."):
-        seg = (seg or "").strip()
-        if len(seg) > 20: pts.append(seg)
-        if len(pts) >= 4: break
-    pri = "high" if any((x or "").lower() in ("regression","cve","abi","弃用") for x in (tags or [])) else "medium"
-    one = (pts[0] if pts else ctx) or title
-    reason = "疑似重要变更（启发式）" if pri=="high" else "一般性改动（启发式）"
-    return {
-        "title": title,
-        "context": ctx,
-        "key_points": pts or ([ctx] if ctx else []),
-        "impact": "",
-        "links": _sanitize_links(links),
-        "tags": list(dict.fromkeys([str(t) for t in (tags or []) if t])),
-        "priority": pri,
-        "importance": 90 if pri=="high" else (70 if pri=="medium" else 40),
-        "one_liner": one,
-        "importance_reason": reason
-    }
-
-def _normalize_summary(js: dict, fallback_title: str, links: list, tags_union: list) -> dict:
-    js = dict(js or {})
-    js["title"]    = js.get("title") or fallback_title or "(no title)"
-    js["context"]  = js.get("context") or ""
-    js["key_points"] = [str(x) for x in (js.get("key_points") or [])]
-    js["impact"]   = js.get("impact") or ""
-    js["links"]    = _sanitize_links((js.get("links") or []) + (links or []))
-    js["tags"]     = list(dict.fromkeys([str(t) for t in ((js.get("tags") or []) + (tags_union or [])) if t]))
-    pri = (js.get("priority") or "low").lower()
-    if pri not in ("high","medium","low"): pri = "low"
-    js["priority"] = pri
-    try:
-        imp = int(js.get("importance"))
-    except Exception:
-        imp = 90 if pri=="high" else (70 if pri=="medium" else 40)
-    js["importance"] = max(0, min(100, int(imp)))
-    js["one_liner"] = js.get("one_liner") or (js["key_points"][0] if js["key_points"] else js["context"][:120])
-    js["importance_reason"] = js.get("importance_reason") or ("高风险/重要变更（启发式）" if pri=="high" else "一般性改动（启发式）")
-    return js
-
-def zh_translate(title: str, context: str, points: list, one_liner: str, reason: str) -> dict:
-    title = title or ""; context = context or ""; pts = [str(p) for p in (points or [])][:8]
-    src = (
-        f"标题: {title}\n"
-        f"上下文: {context[:800]}\n"
-        f"要点:\n" + "\n".join(f"- {p}" for p in pts) + "\n"
-        f"一句话: {one_liner}\n"
-        f"重要性理由: {reason}\n"
-    )
-    prompt = ("把以上英文技术内容翻成专业中文（保留专有名词），只输出 JSON："
-              '{"title_zh":"...","context_zh":"...","key_points_zh":["..."],'
-              '"one_liner_zh":"...","importance_reason_zh":"..."}')
-    try:
-        out = llm_generate(prompt + "\n\n" + src)
-        for js in _iter_json_candidates(out):
-            if all(k in js for k in ("title_zh","context_zh","key_points_zh","one_liner_zh","importance_reason_zh")):
-                js["key_points_zh"] = [str(p) for p in (js.get("key_points_zh") or pts)]
-                for k in ("title_zh","context_zh","one_liner_zh","importance_reason_zh"):
-                    js[k] = js.get(k) or (one_liner if k=="one_liner_zh" else reason if k=="importance_reason_zh" else "")
-                return js
-    except Exception:
-        pass
-    return {
-        "title_zh": title, "context_zh": context,
-        "key_points_zh": pts, "one_liner_zh": one_liner or title,
-        "importance_reason_zh": reason or ""
-    }
-
-def make_digest_zh(title_zh: str, context_zh: str, key_points_zh: list):
-    pts = "\n".join(f"- {p}" for p in (key_points_zh or [])[:6])
-    prompt = DIGEST_PROMPT_TMPL.format(title=title_zh or "", context=(context_zh or "")[:800], points=pts)
-    try:
-        out = llm_generate(prompt)
-        for js in _iter_json_candidates(out):
-            if "digest_zh" in js:
-                js["digest_zh"] = [str(x) for x in (js.get("digest_zh") or []) if x]
-                if js["digest_zh"]: return js
-    except Exception:
-        pass
-    return {"digest_zh": [p for p in (key_points_zh or [])[:2]] or [ (context_zh or "")[:100] ]}
-
-def _window():
-    """
-    WINDOW_MODE:
-      - "rolling"      : 滚动 TIME_WINDOW_DAYS 天（默认）
-      - "week_to_date" : 本周一 00:00 -> 现在
-      - "last_week"    : 上周一 00:00 -> 上周日 23:59
-    WEEK_START: 一周起始（1=周一, 0=周日）。默认 1。
-    """
-    mode = os.getenv("WINDOW_MODE", "rolling").lower()
-    week_start = int(os.getenv("WEEK_START", "1"))  # 1=Mon, 0=Sun
+# --------------------------- 时间窗口 ---------------------------
+def _window() -> Tuple[datetime, datetime]:
     now = datetime.now()
-
-    if mode == "week_to_date":
-        # 找到本周的周起始
-        # Python: Monday=0..Sunday=6；我们把 week_start=1 映射到 Monday=0
-        py_week_start = (week_start - 1) % 7
+    if WINDOW_MODE == "week_to_date":
+        py_week_start = (WEEK_START - 1) % 7  # Monday=0..Sunday=6
         delta = (now.weekday() - py_week_start) % 7
         start = (now - timedelta(days=delta)).replace(hour=0, minute=0, second=0, microsecond=0)
-        end = now
-        return start, end
-
-    if mode == "last_week":
-        py_week_start = (week_start - 1) % 7
-        # 本周起点
+        return start, now
+    if WINDOW_MODE == "last_week":
+        py_week_start = (WEEK_START - 1) % 7
         delta = (now.weekday() - py_week_start) % 7
         this_week_start = (now - timedelta(days=delta)).replace(hour=0, minute=0, second=0, microsecond=0)
-        # 上周起点/终点
         start = this_week_start - timedelta(days=7)
         end = this_week_start - timedelta(microseconds=1)
         return start, end
+    # rolling
+    return now - timedelta(days=TIME_WINDOW_DAYS), now
 
-    # 默认：滚动 TIME_WINDOW_DAYS 天
-    days = int(os.getenv("TIME_WINDOW_DAYS", "7"))
-    start = now - timedelta(days=days)
-    end = now
-    return start, end
-def main():
-    ensure_tables()
-    conn = pg_conn(); start, end = _window()
+
+# --------------------------- LLM 封装 ---------------------------
+def _post_json(url, payload, headers=None, timeout=REQ_TIMEOUT):
+    r = requests.post(url, json=payload, headers=headers or {}, timeout=timeout)
+    r.raise_for_status()
+    return r
+
+def llm_chat(prompt_zh: str, prompt_en: str = "") -> Dict[str, str]:
+    """
+    返回 {"one_liner_zh": ..., "digest_zh": ..., "one_liner": ..., "digest": ...}
+    - 允许任一方向为空串；调用处负责默认值。
+    """
+    sys_zh = (
+        "你是编译器周报的编辑。请：\n"
+        "1) 用中文给出一句话要点（<=40字，客观陈述，不用感叹号）\n"
+        "2) 用中文给出 3-5 行要点摘要（以 - 开头的列表，每行不超过28字）\n"
+        "仅输出 JSON：{\"one_liner_zh\":\"...\",\"digest_zh\":[\"...\",\"...\",...]}\n"
+    )
+    sys_en = (
+        "You are an editor. Please:\n"
+        "1) Provide a one-sentence key point (<=20 words)\n"
+        "2) Provide 3-5 bullet points (each <=18 words)\n"
+        "Output JSON only: {\"one_liner\":\"...\",\"digest\":[\"...\",\"...\",...]}\n"
+    )
+
+    out: Dict[str, str] = {"one_liner_zh":"", "one_liner":"", "digest_zh":"", "digest":""}
+
+    try:
+        if LLM_PROVIDER == "ollama":
+            with status("[summ] 调用 OLLAMA (ZH)…", spinner="dots"):
+                r1 = _post_json(f"{OLLAMA_HOST}/api/chat", {
+                    "model": OLLAMA_MODEL,
+                    "messages": [{"role":"system","content":sys_zh},{"role":"user","content":prompt_zh}],
+                    "stream": False, "options": {"temperature": 0.2}
+                })
+            zh = r1.json().get("message", {}).get("content", "") or r1.json().get("response","")
+            try:
+                js = json.loads(zh)
+                out["one_liner_zh"] = js.get("one_liner_zh","").strip()
+                digest_zh = js.get("digest_zh") or []
+                if isinstance(digest_zh, list):
+                    out["digest_zh"] = "\n".join(f"- {x.strip()}" for x in digest_zh if str(x).strip())
+                else:
+                    out["digest_zh"] = str(digest_zh).strip()
+            except Exception:
+                out["one_liner_zh"] = zh.strip()[:80]
+                out["digest_zh"] = ""
+
+            with status("[summ] 调用 OLLAMA (EN)…", spinner="dots"):
+                r2 = _post_json(f"{OLLAMA_HOST}/api/chat", {
+                    "model": OLLAMA_MODEL,
+                    "messages": [{"role":"system","content":sys_en},{"role":"user","content":prompt_en or prompt_zh}],
+                    "stream": False, "options": {"temperature": 0.2}
+                })
+            en = r2.json().get("message", {}).get("content", "") or r2.json().get("response","")
+            try:
+                js = json.loads(en)
+                out["one_liner"] = js.get("one_liner","").strip()
+                digest = js.get("digest") or []
+                if isinstance(digest, list):
+                    out["digest"] = "\n".join(f"- {x.strip()}" for x in digest if str(x).strip())
+                else:
+                    out["digest"] = str(digest).strip()
+            except Exception:
+                out["one_liner"] = en.strip().split("\n")[0][:80]
+                out["digest"] = ""
+            return out
+
+        # OPENAI
+        headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
+        def _openai(messages):
+            r = _post_json(f"{OPENAI_BASE}/chat/completions",
+                           {"model": OPENAI_MODEL, "messages": messages, "temperature": 0.2},
+                           headers=headers)
+            return r.json()["choices"][0]["message"]["content"].strip()
+
+        with status("[summ] 调用 OPENAI (ZH)…", spinner="dots"):
+            zh = _openai([{"role":"system","content":sys_zh},{"role":"user","content":prompt_zh}])
+        try:
+            js = json.loads(zh)
+            out["one_liner_zh"] = js.get("one_liner_zh","").strip()
+            digest_zh = js.get("digest_zh") or []
+            out["digest_zh"] = "\n".join(f"- {x.strip()}" for x in digest_zh if str(x).strip()) \
+                               if isinstance(digest_zh, list) else str(digest_zh).strip()
+        except Exception:
+            out["one_liner_zh"] = zh.strip()[:80]
+            out["digest_zh"] = ""
+
+        with status("[summ] 调用 OPENAI (EN)…", spinner="dots"):
+            en = _openai([{"role":"system","content":sys_en},{"role":"user","content":prompt_en or prompt_zh}])
+        try:
+            js = json.loads(en)
+            out["one_liner"] = js.get("one_liner","").strip()
+            digest = js.get("digest") or []
+            out["digest"] = "\n".join(f"- {x.strip()}" for x in digest if str(x).strip()) \
+                            if isinstance(digest, list) else str(digest).strip()
+        except Exception:
+            out["one_liner"] = en.strip().split("\n")[0][:80]
+            out["digest"] = ""
+        return out
+
+    except Exception as ex:
+        warn(f"[summ] LLM 调用失败：{ex}")
+        return out  # 返回空/部分字段，调用处兜底
+
+
+# --------------------------- 数据准备 ---------------------------
+def _fetch_clusters_in_window(conn, start: datetime, end: datetime) -> List[Tuple[str, str, Dict[str,Any]]]:
+    """
+    返回 [(cluster_id, title, summary_json), ...]
+    只取窗口内有文章的簇。
+    """
     cur = conn.cursor()
     cur.execute("""
-      SELECT c.cluster_id, array_agg(c.id) AS ids, MIN(c.created_at) AS first_created
+      SELECT DISTINCT ON (c.cluster_id) c.cluster_id, c.title, c.summary
       FROM clusters c
       JOIN articles_clean a ON a.id = c.id
       WHERE a.ts >= %s AND a.ts < %s
-      GROUP BY c.cluster_id
-      ORDER BY first_created DESC
-      LIMIT 100;
-    """, (start, end))
-    groups = cur.fetchall()
-    print(f"[summarize] groups in window {start.date()} ~ {end.date()}: {len(groups)}")
-    if not groups:
-        cur.close(); conn.close(); print("[summarize] no clusters in window, exit."); return
+      ORDER BY c.cluster_id, c.created_at DESC
+      LIMIT %s;
+    """, (start, end, BATCH_LIMIT))
+    rows = cur.fetchall()
+    cur.close()
 
-    cur_write = conn.cursor()
-    for cid, id_list, _fc in groups:
-        q = conn.cursor()
-        q.execute("SELECT title, url, text, metadata FROM articles_clean WHERE id = ANY(%s)", (id_list,))
-        rows = q.fetchall(); q.close()
+    out = []
+    for cid, title, summary in rows:
+        js = summary if isinstance(summary, dict) else json.loads(summary or "{}")
+        out.append((cid, title or "", js))
+    return out
 
-        materials = ""; links=[]; tags_union=set()
-        for title, url, text, md in rows:
-            materials += f"\n- {title}\n  {url}\n  {(text or '')[:1200]}...\n"
-            if url: links.append(url)
+
+def _fetch_cluster_materials(conn, cid: str) -> List[Dict[str,Any]]:
+    """
+    取该簇关联的若干篇文章，按时间倒序，生成材料：
+      - title / url / text / metadata(tags/projects/arches/priority)
+    """
+    cur = conn.cursor()
+    cur.execute("""
+      SELECT a.title, a.url, a.text, a.metadata, a.ts
+      FROM clusters c
+      JOIN articles_clean a ON a.id = c.id
+      WHERE c.cluster_id=%s
+      ORDER BY a.ts DESC
+      LIMIT %s;
+    """, (cid, MAX_ART_PER_CLU))
+    rows = cur.fetchall()
+    cur.close()
+
+    mats = []
+    for title, url, text, md, ts in rows:
+        meta = md if isinstance(md, dict) else (json.loads(md or "{}"))
+        mats.append({
+            "title": title or "",
+            "url": url or "",
+            "text": (text or "").strip(),
+            "projects": meta.get("projects") or [],
+            "topics": meta.get("topics") or [],
+            "arches": meta.get("arches") or [],
+            "priority": (meta.get("priority") or "low"),
+            "ts": ts
+        })
+    return mats
+
+
+# --------------------------- 合并 & 写库 ---------------------------
+def _safe_merge(old: Dict[str,Any], new: Dict[str,Any]) -> Dict[str,Any]:
+    """
+    安全合并 summary：所有字段用 get + 默认值，不抛 KeyError。
+    优先保留 new 中的非空字段；old 作为回退。
+    """
+    old = old or {}
+    merged = dict(old)  # 先拷贝旧的，逐项覆盖
+
+    # 标准字段（皆可缺省）
+    fields = [
+        "title","title_zh",
+        "one_liner","one_liner_zh",
+        "digest","digest_zh",
+        "context","context_zh",
+        "key_points","key_points_zh",
+        "links","tags","projects","topics","arches",
+        "priority","importance","lang"
+    ]
+    for k in fields:
+        nv = new.get(k, None) if new else None
+        ov = old.get(k, None)
+        if nv in (None, "", [], {}):
+            merged[k] = ov
+        else:
+            merged[k] = nv
+
+    # 保底：基本标题
+    if not merged.get("title"):
+        merged["title"] = old.get("title") or "(no title)"
+    if not merged.get("lang"):
+        merged["lang"] = old.get("lang") or "en"
+
+    return merged
+
+
+def _update_cluster_summary(conn, cid: str, summary_obj: Dict[str,Any]) -> int:
+    """
+    将同一 cluster_id 的所有行的 summary 更新为相同内容，保证一致性。
+    返回受影响行数。
+    """
+    cur = conn.cursor()
+    cur.execute("""
+      UPDATE clusters SET summary=%s WHERE cluster_id=%s;
+    """, (json.dumps(summary_obj, ensure_ascii=False), cid))
+    n = cur.rowcount or 0
+    conn.commit()
+    cur.close()
+    return n
+
+
+# --------------------------- 主流程 ---------------------------
+@step("Summarize Clusters")
+def main():
+    ensure_tables()
+    start, end = _window()
+    kv_line("[summ] 参数",
+            window_mode=WINDOW_MODE, time_window_days=TIME_WINDOW_DAYS, week_start=WEEK_START,
+            llm=LLM_PROVIDER, model=(OLLAMA_MODEL if LLM_PROVIDER=="ollama" else OPENAI_MODEL))
+
+    kv_line("[summ] 时间窗口",
+            start=start.strftime("%Y-%m-%d %H:%M"), end=end.strftime("%Y-%m-%d %H:%M"))
+
+    conn = pg_conn()
+
+    with status("[summ] 读取窗口内簇列表 …", spinner="dots"):
+        clusters = _fetch_clusters_in_window(conn, start, end)
+    info(f"[summ] 命中簇：{len(clusters)}")
+
+    processed = 0
+    failures  = 0
+    skipped   = 0
+
+    # 进度条：每簇一个刻度
+    with new_progress() as progress:
+        task = progress.add_task("生成摘要", total=len(clusters))
+
+        for cid, title, old_sum in clusters:
             try:
-                m = md if isinstance(md, dict) else json.loads(md or "{}")
-                for k in ("projects","topics","arches"):
-                    for t in (m.get(k) or []):
-                        if t: tags_union.add(t)
-                if m.get("priority"): tags_union.add(m["priority"])
-            except Exception:
-                pass
+                # 跳过已有摘要（可通过环境变量关闭跳过）
+                if SKIP_IF_EXISTS and (old_sum.get("one_liner_zh") or old_sum.get("digest_zh")
+                                       or old_sum.get("one_liner") or old_sum.get("digest")):
+                    skipped += 1
+                    progress.advance(task, 1)
+                    continue
 
-        raw = llm_generate(PROMPT_TMPL.format(fields_hint=FIELDS_HINT, materials=materials[:8000]))
-        js = _best_json(raw)
-        if not js:
-            t0 = rows[0][0] if rows else "(no title)"
-            txt= rows[0][2] if rows else ""
-            js = _fallback_summary(t0, links, txt, list(tags_union))
-        else:
-            t0 = rows[0][0] if rows else "(no title)"
-            js = _normalize_summary(js, t0, links, list(tags_union))
+                # 取材料
+                mats = _fetch_cluster_materials(conn, cid)
+                if not mats:
+                    skipped += 1
+                    progress.advance(task, 1)
+                    continue
 
-        # lang + zh fields
-        try:
-            lang = detect((js.get("title") or "") + " " + (js.get("context") or ""))
-        except Exception:
-            lang = "en"
-        js["lang"] = lang
-        if lang != "zh":
-            tr = zh_translate(js.get("title",""), js.get("context",""), js.get("key_points",[]),
-                              js.get("one_liner",""), js.get("importance_reason",""))
-            js.update(tr)
-        else:
-            js["title_zh"] = js.get("title","")
-            js["context_zh"] = js.get("context","")
-            js["key_points_zh"] = js.get("key_points",[])
-            js["one_liner_zh"] = js.get("one_liner","") or js.get("title","")
-            js["importance_reason_zh"] = js.get("importance_reason","")
+                # 构造 prompt（中英文双份；英文可选）
+                bullets = []
+                for m in mats:
+                    tline = (m["text"][:220] + "…") if len(m["text"]) > 220 else m["text"]
+                    bullets.append(f"- {m['title']}\n  {tline}\n  link: {m['url']}")
+                prompt_zh = (
+                    "以下是某个技术主题的若干条资讯/提交。请抽取核心结论与变化：\n"
+                    + "\n".join(bullets)
+                )
+                prompt_en = (
+                    "Several items on a technical topic. Extract the essence and summarize:\n"
+                    + "\n".join(bullets)
+                )
 
-        # digest
-        digest = make_digest_zh(js.get("title_zh",""), js.get("context_zh",""), js.get("key_points_zh",[]))
-        js.update(digest)
+                # 调 LLM
+                out = llm_chat(prompt_zh, prompt_en)
 
-        payload = json.dumps(js, ensure_ascii=False)
-        for _id in id_list:
-            cur_write.execute("UPDATE clusters SET summary=%s WHERE id=%s", (payload, _id))
-        conn.commit()
+                # 组装新的 summary 片段（字段都可缺省）
+                new_part = {
+                    "title": old_sum.get("title") or title or "(no title)",
+                    "title_zh": old_sum.get("title_zh") or "",
+                    "one_liner": out.get("one_liner",""),
+                    "one_liner_zh": out.get("one_liner_zh",""),
+                    "digest": out.get("digest",""),
+                    "digest_zh": out.get("digest_zh",""),
+                    "links": old_sum.get("links") or [],
+                    "tags": old_sum.get("tags") or [],
+                    "projects": old_sum.get("projects") or [],
+                    "topics": old_sum.get("topics") or [],
+                    "arches": old_sum.get("arches") or [],
+                    "priority": old_sum.get("priority") or "low",
+                    "importance": old_sum.get("importance") or 50,
+                    "lang": old_sum.get("lang") or "en",
+                    "context": old_sum.get("context") or "",
+                    "context_zh": old_sum.get("context_zh") or "",
+                    "key_points": old_sum.get("key_points") or [],
+                    "key_points_zh": old_sum.get("key_points_zh") or [],
+                }
 
-    cur_write.close(); cur.close(); conn.close()
-    print(f"[summarize] done (window: {start.date()} ~ {end.date()}, days={TIME_WINDOW_DAYS})")
+                merged = _safe_merge(old_sum, new_part)
+                n = _update_cluster_summary(conn, cid, merged)
+                processed += (1 if n > 0 else 0)
+            except Exception as ex:
+                failures += 1
+                error(f"[summ] 处理簇失败：{cid} -> {ex}")
+            finally:
+                progress.advance(task, 1)
 
-from pipelines.util import run_cli
+    kv_table("[summ] 汇总", {
+        "clusters_in_window": len(clusters),
+        "processed": processed,
+        "skipped_exists": skipped,
+        "failures": failures,
+        "window_days": TIME_WINDOW_DAYS,
+        "window_mode": WINDOW_MODE,
+    })
+    success(f"[summ] done (window: {start.date()} ~ {end.date()}, days={TIME_WINDOW_DAYS})")
+
+
+# --------------------------- CLI 入口 ---------------------------
 if __name__ == "__main__":
     run_cli(main)
