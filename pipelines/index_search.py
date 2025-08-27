@@ -10,7 +10,7 @@
 import os, json, time, requests, meilisearch
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 from pipelines.util import pg_conn, ensure_tables, run_cli
 from pipelines.logging_utils import (
@@ -23,6 +23,7 @@ load_dotenv()
 HOST   = os.getenv("MEILI_HOST", "http://localhost:7700").rstrip("/")
 MASTER = os.getenv("MEILI_MASTER_KEY", "master_key_change_me")
 INDEX  = "intel_clusters"
+PUBLIC_EXP_DAYS = int(os.getenv("MEILI_PUBLIC_KEY_EXPIRES_DAYS", "3650"))
 
 
 # --------------------------- Jinja 环境 ---------------------------
@@ -140,13 +141,18 @@ def main():
         # 4) 创建公开 key（若未设置）
         if not public_key:
             try:
+                # Meilisearch 新版本要求携带 expiresAt；用 UTC、到秒、Z 结尾的 RFC3339
+                expires_at = (datetime.now(timezone.utc)  timedelta(days=PUBLIC_EXP_DAYS)) \
+                        .replace(microsecond=0).isoformat().replace("00:00", "Z")
                 key = client.create_key({
-                    "name":"public-search",
-                    "actions":["search"],
-                    "indexes":[INDEX]
+                    "name": "public-search",
+                    "description": "Read-only client key for browser search",
+                    "actions": ["search"],
+                    "indexes": [INDEX],
+                    "expiresAt": expires_at,
                 })
-                public_key = key.get("key","")
-                success("[index] 已创建 public key")
+                public_key = key.get("key", "")
+                success(f"[index] 已创建 public key（有效期 {PUBLIC_EXP_DAYS} 天）")
             except Exception as e:
                 warn(f"[index] public key 创建失败: {e}")
                 public_key = ""
