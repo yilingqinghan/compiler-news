@@ -23,7 +23,7 @@ load_dotenv()
 HOST   = os.getenv("MEILI_HOST", "http://localhost:7700").rstrip("/")
 MASTER = os.getenv("MEILI_MASTER_KEY", "master_key_change_me")
 INDEX  = "intel_clusters"
-PUBLIC_EXP_DAYS = int(os.getenv("MEILI_PUBLIC_KEY_EXPIRES_DAYS", "3650"))
+PUBLIC_EXP_DAYS = int(os.getenv("MEILI_PUBLIC_KEY_EXPIRES_DAYS", "36500"))
 
 
 # --------------------------- Jinja 环境 ---------------------------

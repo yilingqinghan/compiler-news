@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+<title>编译器周报</title>
+<description>最近一周聚合（LLVM/GCC/Rust/Swift/Wasmtime 等）</description>
+<link></link>
+<pubDate>2025-08-26T14:54:39.959524</pubDate>
+<item>
+<title>[libcxx] 回复 mi_mode_test 在使用 libc++-21 时的失败</title>
+<description>此 pull 请求修复了 libc++-21 中与 GDB 粘贴器和 JSON 序列化有关的 mi_mode_test 测试失败。</description>
+<link>https://github.com/llvm/llvm-project/pull/153969</link>
+<guid>https://github.com/llvm/llvm-project/pull/153969</guid>
+</item>
+<item>
+<title>Debuginfo 添加 Debuginfod 工厂方法</title>
+<description>LLVM Project 的 debuginfo 模块新增了一个 debuginfod 工厂方法。</description>
+<link>https://github.com/llvm/llvm-project/pull/154633</link>
+<guid>https://github.com/llvm/llvm-project/pull/154633</guid>
+</item>
+<item>
+<title>RISCV: 添加针对 qc.insb 和 qc.insbi 指令的更好覆盖率</title>
+<description>针对 RISCV 后端，新 pull 请求旨在通过增加覆盖范围来改进位域插入指令的处理。</description>
+<link>https://github.com/llvm/llvm-project/pull/154135</link>
+<guid>https://github.com/llvm/llvm-project/pull/154135</guid>
+</item>
+<item>
+<title>OpenMP 6.0 允许目标指令的默认子句</title>
+<description>引入了支持 OpenMP 目标指令中的默认子句功能。</description>
+<link>https://github.com/llvm/llvm-project/pull/154942</link>
+<guid>https://github.com/llvm/llvm-project/pull/154942</guid>
+</item>
+<item>
+<title>[flang] do concurrent: 固定映射到OpenMP时的reduction操作符号解析错误</title>
+<description>此PR解决了flang OpenMP pass中reduction操作的符号解析问题。</description>
+<link>https://github.com/llvm/llvm-project/pull/155355</link>
+<guid>https://github.com/llvm/llvm-project/pull/155355</guid>
+</item>
+<item>
+<title>libc++ 实现 LWG 3886 的解决</title>
+<description>Patch 实现了 LWG 3886 在 libc++, 提升类型安全和初始化。</description>
+<link>https://github.com/llvm/llvm-project/pull/155356</link>
+<guid>https://github.com/llvm/llvm-project/pull/155356</guid>
+</item>
+<item>
+<title>在libc++中实现P2988R12: `std::optional&lt;T&amp;&gt;`</title>
+<description>在libc++中实现P2988R12: `std::optional&lt;T&amp;&gt;`更新了文档。</description>
+<link>https://github.com/llvm/llvm-project/pull/155202</link>
+<guid>https://github.com/llvm/llvm-project/pull/155202</guid>
+</item>
+<item>
+<title>[clang] 添加 canddiscard 属性以抑制 nodiscard</title>
+<description>Clang 添加 `canddiscard` 属性支持以抑制 [[nodiscard]]，解决 llvm#139651 要求。</description>
+<link>https://github.com/llvm/llvm-project/pull/154943</link>
+<guid>https://github.com/llvm/llvm-project/pull/154943</guid>
+</item>
+<item>
+<title>[libcxx] 回复 mi_mode_test 在使用 libc++-21 时的失败</title>
+<description>此 pull 请求修复了 libc++-21 中与 GDB 粘贴器和 JSON 序列化有关的 mi_mode_test 测试失败。</description>
+<link>https://github.com/llvm/llvm-project/pull/153969</link>
+<guid>https://github.com/llvm/llvm-project/pull/153969</guid>
+</item>
+<item>
+<title>Debuginfo 添加 Debuginfod 工厂方法</title>
+<description>LLVM Project 的 debuginfo 模块新增了一个 debuginfod 工厂方法。</description>
+<link>https://github.com/llvm/llvm-project/pull/154633</link>
+<guid>https://github.com/llvm/llvm-project/pull/154633</guid>
+</item>
+<item>
+<title>RISCV: 添加针对 qc.insb 和 qc.insbi 指令的更好覆盖率</title>
+<description>针对 RISCV 后端，新 pull 请求旨在通过增加覆盖范围来改进位域插入指令的处理。</description>
+<link>https://github.com/llvm/llvm-project/pull/154135</link>
+<guid>https://github.com/llvm/llvm-project/pull/154135</guid>
+</item>
+<item>
+<title>OpenMP 6.0 允许目标指令的默认子句</title>
+<description>引入了支持 OpenMP 目标指令中的默认子句功能。</description>
+<link>https://github.com/llvm/llvm-project/pull/154942</link>
+<guid>https://github.com/llvm/llvm-project/pull/154942</guid>
+</item>
+<item>
+<title>[flang] do concurrent: 固定映射到OpenMP时的reduction操作符号解析错误</title>
+<description>此PR解决了flang OpenMP pass中reduction操作的符号解析问题。</description>
+<link>https://github.com/llvm/llvm-project/pull/155355</link>
+<guid>https://github.com/llvm/llvm-project/pull/155355</guid>
+</item>
+<item>
+<title>libc++ 实现 LWG 3886 的解决</title>
+<description>Patch 实现了 LWG 3886 在 libc++, 提升类型安全和初始化。</description>
+<link>https://github.com/llvm/llvm-project/pull/155356</link>
+<guid>https://github.com/llvm/llvm-project/pull/155356</guid>
+</item>
+<item>
+<title>在libc++中实现P2988R12: `std::optional&lt;T&amp;&gt;`</title>
+<description>在libc++中实现P2988R12: `std::optional&lt;T&amp;&gt;`更新了文档。</description>
+<link>https://github.com/llvm/llvm-project/pull/155202</link>
+<guid>https://github.com/llvm/llvm-project/pull/155202</guid>
+</item>
+<item>
+<title>[clang] 添加 canddiscard 属性以抑制 nodiscard</title>
+<description>Clang 添加 `canddiscard` 属性支持以抑制 [[nodiscard]]，解决 llvm#139651 要求。</description>
+<link>https://github.com/llvm/llvm-project/pull/154943</link>
+<guid>https://github.com/llvm/llvm-project/pull/154943</guid>
+</item>
+<item>
+<title>Fix Test 添加以处理 Windows 样式的路径分隔符</title>
+<description>Fix 测试以处理 Windows-style 路径分隔符，确保构建兼容性。</description>
+<link>https://github.com/llvm/llvm-project/pull/155354</link>
+<guid>https://github.com/llvm/llvm-project/pull/155354</guid>
+</item>
+<item>
+<title>Fix Test以正确处理Windows路径分隔符</title>
+<description>Fixes a test to work correctly with Windows style file paths.</description>
+<link>https://github.com/llvm/llvm-project/commit/7d35e29d7a7f89c828e91c03d3827a43deaa5dec</link>
+<guid>https://github.com/llvm/llvm-project/commit/7d35e29d7a7f89c828e91c03d3827a43deaa5dec</guid>
+</item>
+<item>
+<title>Add C++23 stacktrace (P0881R7)</title>
+<description>增加对C++23堆栈跟踪功能的支持，允许使用外部调试工具。</description>
+<link>https://github.com/llvm/llvm-project/pull/136528</link>
+<guid>https://github.com/llvm/llvm-project/pull/136528</guid>
+</item>
+<item>
+<title>[clangd] [C++20 Modules] 添加 --debug-modules-builder</title>
+<description>添加一个新标志以防止 module 文件在 clangd 中被删除，以便调试 C++20 模块。</description>
+<link>https://github.com/llvm/llvm-project/commit/d8709ae859e5dcf628a9bcb23c916e24611ab8bc</link>
+<guid>https://github.com/llvm/llvm-project/commit/d8709ae859e5dcf628a9bcb23c916e24611ab8bc</guid>
+</item>
+<item>
+<title>[mlir][vector] 遵循多维向量.from_elements支持的改进</title>
+<description>引入了针对MLIR中多维向量.from_elements操作的新线性化模式。</description>
+<link>https://github.com/llvm/llvm-project/pull/154664</link>
+<guid>https://github.com/llvm/llvm-project/pull/154664</guid>
+</item>
+<item>
+<title>MLIR [WASM] 控制流、转换和比较在 Wasm 导入器中的监控与导入</title>
+<description>新补丁增加了监控层级和控制流导入功能到 MLIR Wasm 二进制编码导入器。</description>
+<link>https://github.com/llvm/llvm-project/pull/154674</link>
+<guid>https://github.com/llvm/llvm-project/pull/154674</guid>
+</item>
+<item>
+<title>[clangd] 模块日志中去除点字符</title>
+<description>LLVM项目中的模块日志中移除点字符的提交</description>
+<link>https://github.com/llvm/llvm-project/commit/c2e8065b9e2edc184e5c1d3f2b2f1e82f4a3a4a2</link>
+<guid>https://github.com/llvm/llvm-project/commit/c2e8065b9e2edc184e5c1d3f2b2f1e82f4a3a4a2</guid>
+</item>
+<item>
+<title>AMDGPU：处理重写VGPR MFMA从AGPR复制</title>
+<description>改进支持VGPR在MFMA操作中的使用以增强性能和行为。</description>
+<link>https://github.com/llvm/llvm-project/pull/153022</link>
+<guid>https://github.com/llvm/llvm-project/pull/153022</guid>
+</item>
+<item>
+<title>Add 多路分割支持以改进全局ISel中的宽标量移位优化</title>
+<description>增加直接多路分割以改进编译时间和减少中间艺术作品生成。</description>
+<link>https://github.com/llvm/llvm-project/pull/155353</link>
+<guid>https://github.com/llvm/llvm-project/pull/155353</guid>
+</item>
+<item>
+<title>[clang][字节码] 断言 `Offset != PastEndMark &amp;&amp; "invalid offset"` 失效</title>
+<description>Labels clang:bytecodeIssues for the clang bytecode constexpr interpreter Issues for the clang bytecode constexpr interpreter 语言前端问题，例如涉及 "Sema" 的一切内容。</description>
+<link>https://github.com/llvm/llvm-project/issues/152903</link>
+<guid>https://github.com/llvm/llvm-project/issues/152903</guid>
+</item>
+<item>
+<title>Clang：避免对one-past-end指针调用getIndex()</title>
+<description>Clang通过修改字节码实现的字符串常量检查逻辑来解决潜在崩溃。</description>
+<link>https://github.com/llvm/llvm-project/commit/97b3cb223907f636730c1ab8c3c716b27a02084a</link>
+<guid>https://github.com/llvm/llvm-project/commit/97b3cb223907f636730c1ab8c3c716b27a02084a</guid>
+</item>
+<item>
+<title>简化 `insert(std::make_pair(K, V))` -&gt; `try_emplace(K, V)`</title>
+<description>A commit to LLVM project simplifies code insertion mechanism by changing `insert(std::make_pair(K, V))` to `try_emplace(K, V)`.</description>
+<link>https://github.com/llvm/llvm-project/commit/c825c8a052923868922de5daffc3018b82724367</link>
+<guid>https://github.com/llvm/llvm-project/commit/c825c8a052923868922de5daffc3018b82724367</guid>
+</item>
+<item>
+<title>[lldb-dap] 添加 lldbdap_testcase.py 中 DAP 服务器断开连接和终止的异常处理</title>
+<description>通过在 lldbdap_testcase.py 中添加异常处理来提高 DAP 服务器的可靠性。</description>
+<link>https://github.com/llvm/llvm-project/pull/155335</link>
+<guid>https://github.com/llvm/llvm-project/pull/155335</guid>
+</item>
+<item>
+<title>[AMDGPU] Refactor insertWaveSizeFeature</title>
+<description>对AMDGPU目标中的一个特性进行重构，以处理仅可能的单值情况。</description>
+<link>https://github.com/llvm/llvm-project/pull/154850</link>
+<guid>https://github.com/llvm/llvm-project/pull/154850</guid>
+</item>
+<item>
+<title>[LLDB] 复审 'Update DIL handling of array subscripting'</title>
+<description>复审 PR 以解决 DIL 中数组下标运算符的特殊代码问题，确保正确性及一致性，并解决特定 buildbot 的问题。</description>
+<link>https://github.com/llvm/llvm-project/pull/154269</link>
+<guid>https://github.com/llvm/llvm-project/pull/154269</guid>
+</item>
+<item>
+<title>[RISCV][TTI] 实现 getAddressComputationCost() 在 RISCV TTI</title>
+<description>一个补丁用于为 RISCV TTI 添加地址计算成本函数，影响了循环向量化结果。</description>
+<link>https://github.com/llvm/llvm-project/pull/149955</link>
+<guid>https://github.com/llvm/llvm-project/pull/149955</guid>
+</item>
+<item>
+<title>[DirectX] Make dx.RawBuffer an op that can't be replaced</title>
+<description>RawBuffer an op that can't be replaced #154620 新增问题。您有关于此项目的任何疑问？请创建一个新 issue 并与该项目的维护者和社区取得联系。</description>
+<link>https://github.com/llvm/llvm-project/pull/154620</link>
+<guid>https://github.com/llvm/llvm-project/pull/154620</guid>
+</item>
+<item>
+<title>[flang][do concurrent] 使用 `local init` 区域生成的值进行初始化</title>
+<description>Flang 编译器提交旨在通过确保局部初始话区域正确生成值来修复测试失败。</description>
+<link>https://github.com/llvm/llvm-project/commit/1a55c63e5f9606ffef6ea94ba01288cf7516843c</link>
+<guid>https://github.com/llvm/llvm-project/commit/1a55c63e5f9606ffef6ea94ba01288cf7516843c</guid>
+</item>
+<item>
+<title>AMDGPU [Attributor] 更新 waves-per-eu 属性</title>
+<description>此 PR 通过确保 'waves-per-eu' 属性仅在必要时更新，优化了 AMDGPU 的工作波浪调度。</description>
+<link>https://github.com/llvm/llvm-project/pull/155246</link>
+<guid>https://github.com/llvm/llvm-project/pull/155246</guid>
+</item>
+<item>
+<title>[AMDGPU] 设置 compute_pgm_rsrc1 的 GRANULATED_WAVEFRONT_SGPR_COUNT 为 0 对于 gfx10+ 架构</title>
+<description>AMDGPU 提出的优化方案：对于 GFX10+ 架构，设置 compute_pgm_rsrc1 的 GRANULATED_WAVEFRONT_SGPR_COUNT 为 0。</description>
+<link>https://github.com/llvm/llvm-project/pull/154666</link>
+<guid>https://github.com/llvm/llvm-project/pull/154666</guid>
+</item>
+<item>
+<title>clang[bytecode] Simplify Pointer</title>
+<description>拉取请求简化了clang ByteCode中的匿名联合体Pointer访问，通过移除PointeeStorage指针。</description>
+<link>https://github.com/llvm/llvm-project/pull/155170</link>
+<guid>https://github.com/llvm/llvm-project/pull/155170</guid>
+</item>
+<item>
+<title>Compiler-Intel 更新</title>
+<description>集群包括有关LLVM改进、bug修复和新功能实现的各种模块更新。</description>
+<link>https://github.com/llvm/llvm-project/commit/9cc89bb23883e7aba07dbeaf5e00a3acb8bb3e67</link>
+<guid>https://github.com/llvm/llvm-project/commit/9cc89bb23883e7aba07dbeaf5e00a3acb8bb3e67</guid>
+</item>
+<item>
+<title>[flang][openmp] 添加 'workdistribute' 构造的 Lowering 转换到 OpenMP dialect 使用 MLIR</title>
+<description>PR 添加了 FLANG 中的 'workdistribute' 构造转换到 OpenMP 拾音器的 MLIR Lowering。</description>
+<link>https://github.com/llvm/llvm-project/pull/154378</link>
+<guid>https://github.com/llvm/llvm-project/pull/154378</guid>
+</item>
+<item>
+<title>添加hwasan静态链接选项</title>
+<description>Adds support for statically linking the hwasan sanitizer to improve memory safety.</description>
+<link>https://github.com/llvm/llvm-project/pull/154529</link>
+<guid>https://github.com/llvm/llvm-project/pull/154529</guid>
+</item>
+<item>
+<title>Cluster 分析</title>
+<description>两个 Clang 拉取请求通过不同机制旨在提升头文件搜索性能。</description>
+<link>https://github.com/llvm/llvm-project/pull/155350</link>
+<guid>https://github.com/llvm/llvm-project/pull/155350</guid>
+</item>
+<item>
+<title>[DAGCombiner] 保持nuw时将mul转换为sll，并在条件满足时使用nuw进行srl+sll结合</title>
+<description>通过保留NUW旗保存mul到sll的转换，并在移位量相同的情况下，使用NUW进行srl+sll结合以优化代码。</description>
+<link>https://github.com/llvm/llvm-project/pull/155043</link>
+<guid>https://github.com/llvm/llvm-project/pull/155043</guid>
+</item>
+<item>
+<title>[X86] 固定 FR16 沉浸问题</title>
+<description>通过在 AVX512FP16 特性不可用时切换到使用 MOVSS，解决了 FR16 沉浸问题。</description>
+<link>https://github.com/llvm/llvm-project/pull/155225</link>
+<guid>https://github.com/llvm/llvm-project/pull/155225</guid>
+</item>
+<item>
+<title>Legalize和选择G_ATOMICRMW_ADD指令</title>
+<description>LLVM为多个RISC-V架构添加了G_ATOMICRMW_ADD指令支持，引入了新的合法性化器和选择器。</description>
+<link>https://github.com/llvm/llvm-project/commit/81740e0c97326930b1a7c4443d2116b14e0b7c3c</link>
+<guid>https://github.com/llvm/llvm-project/commit/81740e0c97326930b1a7c4443d2116b14e0b7c3c</guid>
+</item>
+<item>
+<title>[RISCV][GlobalISel] 法定化和选择G_ATOMICRMW_ADD指令</title>
+<description>补丁支持了新的原子内存指令对RISC-V处理器。</description>
+<link>https://github.com/llvm/llvm-project/pull/153791</link>
+<guid>https://github.com/llvm/llvm-project/pull/153791</guid>
+</item>
+<item>
+<title>检查原子指令的一致对齐</title>
+<description>一个拉取请求，旨在提高LLVM IR中的原子指令对齐一致性。</description>
+<link>https://github.com/llvm/llvm-project/pull/155349</link>
+<guid>https://github.com/llvm/llvm-project/pull/155349</guid>
+</item>
+<item>
+<title>Simplify `insert(std::make_pair(K, V))` -&gt; `try_emplace(K, V)`</title>
+<description>提议变更通过替换`std::make_pair`为`try_emplace`简化了LLVM向量化。</description>
+<link>https://github.com/llvm/llvm-project/pull/155233</link>
+<guid>https://github.com/llvm/llvm-project/pull/155233</guid>
+</item>
+<item>
+<title>[Headers][X86] 更新 FMA3/FMA4 静态内联汇编使用 __builtin_elementwise_fma 并支持 constexpr</title>
+<description>此 PR 更新 LLVM 的 FMA 内置函数，使其使用 `__builtin_elementwise_fma` 并支持 constexpr。</description>
+<link>https://github.com/llvm/llvm-project/pull/154731</link>
+<guid>https://github.com/llvm/llvm-project/pull/154731</guid>
+</item>
+</channel></rss>
