@@ -21,7 +21,7 @@
 1. **克隆仓库**
 
    ```
-   git clone https://github.com/xxx/compiler-intel.git
+   git clone https://github.com/yilingqinghan/compiler-news.git
    cd compiler-intel
    ```
 

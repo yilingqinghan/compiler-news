@@ -28,7 +28,7 @@ WEEK_START       = int(os.getenv("WEEK_START", "1"))  # 1=Mon, 0=Sun
 LLM_PROVIDER     = os.getenv("LLM_PROVIDER", "ollama").lower()
 # OLLAMA
 OLLAMA_HOST      = os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
-OLLAMA_MODEL     = os.getenv("OLLAMA_MODEL", "qwen2.5:3b-instruct")
+OLLAMA_MODEL     = os.getenv("OLLAMA_MODEL", "qwen2.5:32b-instruct")
 # OPENAI
 OPENAI_API_KEY   = os.getenv("OPENAI_API_KEY", "")
 OPENAI_BASE      = os.getenv("OPENAI_BASE", "https://api.openai.com/v1").rstrip("/")
